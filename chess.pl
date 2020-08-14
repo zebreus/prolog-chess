@@ -66,6 +66,30 @@ move(AllPieces, [CurrentX, CurrentY, king, Color], [X, Y]) :-
   canMoveTo(AllPieces, OtherColor, [X,Y]),
   !.
 
+move(AllPieces, [CurrentX, CurrentY, knight, Color], [X,Y]) :-
+  otherColor(Color, OtherColor),
+  (
+    (
+      X is CurrentX + 2;
+      X is CurrentX - 2
+    ),
+    (
+      Y is CurrentY + 1;
+      Y is CurrentY - 1
+    );
+    (
+      X is CurrentX + 1;
+      X is CurrentX - 1
+    ),
+    (
+      Y is CurrentY + 2;
+      Y is CurrentY - 2
+    )
+  ),
+  inBounds([X,Y]),
+  canMoveTo(AllPieces, OtherColor, [X,Y]),
+  !.
+
 
 % canMoveTo(+AllPieces, +Color, +Position)
 % Checks if a piece can move to the given Position. Color speciefies a
