@@ -170,6 +170,41 @@ test(moveKingNotBeatSameColor, [fail]) :-
   ).
 
 
+test(moveKnight, all(Color = [black, white])) :-
+  availableColors(Color),
+  move([ [4,4,knight,Color]], [4,4,knight,Color], [2, 3]),
+  move([ [4,4,knight,Color]], [4,4,knight,Color], [2, 5]),
+  move([ [4,4,knight,Color]], [4,4,knight,Color], [6, 3]),
+  move([ [4,4,knight,Color]], [4,4,knight,Color], [6, 5]),
+  move([ [4,4,knight,Color]], [4,4,knight,Color], [3, 2]),
+  move([ [4,4,knight,Color]], [4,4,knight,Color], [5, 2]),
+  move([ [4,4,knight,Color]], [4,4,knight,Color], [3, 6]),
+  move([ [4,4,knight,Color]], [4,4,knight,Color], [5, 6]).
+
+test(moveKnightBeatOtherColor, all(Color = [black, white])) :-
+  availableColors(Color),
+  otherColor(Color, OtherColor),
+  move([ [4,4,knight,Color], [2,3,pawn,OtherColor]], [4,4,knight,Color], [2, 3]),
+  move([ [4,4,knight,Color], [2,5,pawn,OtherColor]], [4,4,knight,Color], [2, 5]),
+  move([ [4,4,knight,Color], [6,3,pawn,OtherColor]], [4,4,knight,Color], [6, 3]),
+  move([ [4,4,knight,Color], [6,5,pawn,OtherColor]], [4,4,knight,Color], [6, 5]),
+  move([ [4,4,knight,Color], [3,2,pawn,OtherColor]], [4,4,knight,Color], [3, 2]),
+  move([ [4,4,knight,Color], [5,2,pawn,OtherColor]], [4,4,knight,Color], [5, 2]),
+  move([ [4,4,knight,Color], [3,6,pawn,OtherColor]], [4,4,knight,Color], [3, 6]),
+  move([ [4,4,knight,Color], [5,6,pawn,OtherColor]], [4,4,knight,Color], [5, 6]).
+
+test(moveKnightNotBeatSameColor, [fail]) :-
+  availableColors(Color),
+  (
+  move([ [4,4,knight,Color], [2,3,pawn,Color]], [4,4,knight,Color], [2, 3]);
+  move([ [4,4,knight,Color], [2,5,pawn,Color]], [4,4,knight,Color], [2, 5]);
+  move([ [4,4,knight,Color], [6,3,pawn,Color]], [4,4,knight,Color], [6, 3]);
+  move([ [4,4,knight,Color], [6,5,pawn,Color]], [4,4,knight,Color], [6, 5]);
+  move([ [4,4,knight,Color], [3,2,pawn,Color]], [4,4,knight,Color], [3, 2]);
+  move([ [4,4,knight,Color], [5,2,pawn,Color]], [4,4,knight,Color], [5, 2]);
+  move([ [4,4,knight,Color], [3,6,pawn,Color]], [4,4,knight,Color], [3, 6]);
+  move([ [4,4,knight,Color], [5,6,pawn,Color]], [4,4,knight,Color], [5, 6])
+  ).
 
 :- end_tests(move).
 
