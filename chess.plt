@@ -206,6 +206,95 @@ test(moveKnightNotBeatSameColor, [fail]) :-
   move([ [4,4,knight,Color], [5,6,pawn,Color]], [4,4,knight,Color], [5, 6])
   ).
 
+test(moveRookFree, all(Color = [black, white])) :-
+  availableColors(Color),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [4, 1]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [4, 2]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [4, 3]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [4, 5]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [4, 6]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [4, 7]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [4, 8]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [1, 4]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [2, 4]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [3, 4]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [5, 4]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [6, 4]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [7, 4]),
+  move([ [4,4,rook,Color]], [4,4,rook,Color], [8, 4]).
+
+test(moveRookBeatOtherColor, all(Color = [black, white])) :-
+  availableColors(Color),
+  otherColor(Color, OtherColor),
+  move([ [4,4,rook,Color], [4,1,pawn,OtherColor]], [4,4,rook,Color], [4, 1]),
+  move([ [4,4,rook,Color], [4,2,pawn,OtherColor]], [4,4,rook,Color], [4, 2]),
+  move([ [4,4,rook,Color], [4,3,pawn,OtherColor]], [4,4,rook,Color], [4, 3]),
+  move([ [4,4,rook,Color], [4,5,pawn,OtherColor]], [4,4,rook,Color], [4, 5]),
+  move([ [4,4,rook,Color], [4,6,pawn,OtherColor]], [4,4,rook,Color], [4, 6]),
+  move([ [4,4,rook,Color], [4,7,pawn,OtherColor]], [4,4,rook,Color], [4, 7]),
+  move([ [4,4,rook,Color], [4,8,pawn,OtherColor]], [4,4,rook,Color], [4, 8]),
+  move([ [4,4,rook,Color], [1,4,pawn,OtherColor]], [4,4,rook,Color], [1, 4]),
+  move([ [4,4,rook,Color], [2,4,pawn,OtherColor]], [4,4,rook,Color], [2, 4]),
+  move([ [4,4,rook,Color], [3,4,pawn,OtherColor]], [4,4,rook,Color], [3, 4]),
+  move([ [4,4,rook,Color], [5,4,pawn,OtherColor]], [4,4,rook,Color], [5, 4]),
+  move([ [4,4,rook,Color], [6,4,pawn,OtherColor]], [4,4,rook,Color], [6, 4]),
+  move([ [4,4,rook,Color], [7,4,pawn,OtherColor]], [4,4,rook,Color], [7, 4]),
+  move([ [4,4,rook,Color], [8,4,pawn,OtherColor]], [4,4,rook,Color], [8, 4]).
+
+test(moveRookNotBeatSameColor, [fail]) :-
+  availableColors(Color),
+  (
+  move([ [4,4,rook,Color], [4,1,pawn,Color]], [4,4,rook,Color], [4, 1]);
+  move([ [4,4,rook,Color], [4,2,pawn,Color]], [4,4,rook,Color], [4, 2]);
+  move([ [4,4,rook,Color], [4,3,pawn,Color]], [4,4,rook,Color], [4, 3]);
+  move([ [4,4,rook,Color], [4,5,pawn,Color]], [4,4,rook,Color], [4, 5]);
+  move([ [4,4,rook,Color], [4,6,pawn,Color]], [4,4,rook,Color], [4, 6]);
+  move([ [4,4,rook,Color], [4,7,pawn,Color]], [4,4,rook,Color], [4, 7]);
+  move([ [4,4,rook,Color], [4,8,pawn,Color]], [4,4,rook,Color], [4, 8]);
+  move([ [4,4,rook,Color], [1,4,pawn,Color]], [4,4,rook,Color], [1, 4]);
+  move([ [4,4,rook,Color], [2,4,pawn,Color]], [4,4,rook,Color], [2, 4]);
+  move([ [4,4,rook,Color], [3,4,pawn,Color]], [4,4,rook,Color], [3, 4]);
+  move([ [4,4,rook,Color], [5,4,pawn,Color]], [4,4,rook,Color], [5, 4]);
+  move([ [4,4,rook,Color], [6,4,pawn,Color]], [4,4,rook,Color], [6, 4]);
+  move([ [4,4,rook,Color], [7,4,pawn,Color]], [4,4,rook,Color], [7, 4]);
+  move([ [4,4,rook,Color], [8,4,pawn,Color]], [4,4,rook,Color], [8, 4])
+  ).
+
+test(moveRookNotBeyondOtherPiece, [fail]) :-
+  availableColors(Color),
+  availableColors(OtherColor),
+  (
+  move([ [4,4,rook,Color], [5,4,pawn,OtherColor]], [4,4,rook,Color], [6, 4]);
+  move([ [4,4,rook,Color], [5,4,pawn,OtherColor]], [4,4,rook,Color], [8, 4]);
+  move([ [4,4,rook,Color], [7,4,pawn,OtherColor]], [4,4,rook,Color], [8, 4]);
+  move([ [4,4,rook,Color], [3,4,pawn,OtherColor]], [4,4,rook,Color], [2, 4]);
+  move([ [4,4,rook,Color], [3,4,pawn,OtherColor]], [4,4,rook,Color], [1, 4]);
+  move([ [4,4,rook,Color], [2,4,pawn,OtherColor]], [4,4,rook,Color], [1, 4]);
+  move([ [4,4,rook,Color], [4,5,pawn,OtherColor]], [4,4,rook,Color], [4, 6]);
+  move([ [4,4,rook,Color], [4,5,pawn,OtherColor]], [4,4,rook,Color], [4, 8]);
+  move([ [4,4,rook,Color], [4,7,pawn,OtherColor]], [4,4,rook,Color], [4, 8]);
+  move([ [4,4,rook,Color], [4,3,pawn,OtherColor]], [4,4,rook,Color], [4, 2]);
+  move([ [4,4,rook,Color], [4,3,pawn,OtherColor]], [4,4,rook,Color], [4, 1]);
+  move([ [4,4,rook,Color], [4,2,pawn,OtherColor]], [4,4,rook,Color], [4, 1])
+  ).
+
+test(moveRookBeforeOtherPiece, all(Color = _)) :-
+  availableColors(Color),
+  availableColors(OtherColor),
+  move([ [4,4,rook,Color], [8,4,pawn,OtherColor]], [4,4,rook,Color], [7, 4]),
+  move([ [4,4,rook,Color], [7,4,pawn,OtherColor]], [4,4,rook,Color], [6, 4]),
+  move([ [4,4,rook,Color], [7,4,pawn,OtherColor]], [4,4,rook,Color], [5, 4]),
+  move([ [4,4,rook,Color], [2,4,pawn,OtherColor]], [4,4,rook,Color], [3, 4]),
+  move([ [4,4,rook,Color], [1,4,pawn,OtherColor]], [4,4,rook,Color], [2, 4]),
+  move([ [4,4,rook,Color], [1,4,pawn,OtherColor]], [4,4,rook,Color], [3, 4]),
+  move([ [4,4,rook,Color], [4,8,pawn,OtherColor]], [4,4,rook,Color], [4, 7]),
+  move([ [4,4,rook,Color], [4,7,pawn,OtherColor]], [4,4,rook,Color], [4, 6]),
+  move([ [4,4,rook,Color], [4,7,pawn,OtherColor]], [4,4,rook,Color], [4, 5]),
+  move([ [4,4,rook,Color], [4,2,pawn,OtherColor]], [4,4,rook,Color], [4, 3]),
+  move([ [4,4,rook,Color], [4,1,pawn,OtherColor]], [4,4,rook,Color], [4, 2]),
+  move([ [4,4,rook,Color], [4,1,pawn,OtherColor]], [4,4,rook,Color], [4, 3]).
+
+
 :- end_tests(move).
 
 % Test all collision related rules
