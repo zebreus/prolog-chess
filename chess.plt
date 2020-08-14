@@ -37,6 +37,21 @@ test(getDirectionCorrect) :-
 test(getDirectionNoneFails, [fail]) :-
     getDirection(none, _).
 
+test(availableColorsCorrect) :-
+    availableColors(black),
+    availableColors(white).
+
+test(availableColorsNoneFails, [fail]) :-
+    availableColors(none).
+    
+test(availablePiecesContainAll) :-
+    availablePiece(king),
+    availablePiece(queen),
+    availablePiece(rook),
+    availablePiece(bishop),
+    availablePiece(knight),
+    availablePiece(pawn).
+
 :- end_tests(helpers).
 
 :- begin_tests(move).

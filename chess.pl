@@ -3,6 +3,20 @@ otherColor(black, white).
 otherColor(white, black).
 otherColor(none, none).
 
+% availableColors(-Color)
+% All available colors, atm just used for test cases
+availableColors(black).
+availableColors(white).
+
+% availablePiece(-Piece)
+% all available pieces, atm just used for test cases
+availablePiece(king).
+availablePiece(queen).
+availablePiece(rook).
+availablePiece(bishop).
+availablePiece(knight).
+availablePiece(pawn).
+
 % inBounds(+Position)
 inBounds([X,Y]) :-
   X > 0,
