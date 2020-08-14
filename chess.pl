@@ -10,8 +10,22 @@ move(AllPieces, [CurrentX, CurrentY, pawn, white], [X, Y]) :-
   X is CurrentX,
   Y is CurrentY+1,
   Y =< 8,
-  canMoveTo(AllPieces, none, [X,Y]).
+  canMoveTo(AllPieces, none, [X,Y]),
+  !.
 
+move(AllPieces, [CurrentX, CurrentY, pawn, white], [X, Y]) :-
+  X is CurrentX+1,
+  Y is CurrentY+1,
+  Y =< 8,
+  collision(AllPieces, [X,Y], [X,Y,_,black]),
+  !.
+
+move(AllPieces, [CurrentX, CurrentY, pawn, white], [X, Y]) :-
+  X is CurrentX-1,
+  Y is CurrentY+1,
+  Y =< 8,
+  collision(AllPieces, [X,Y], [X,Y,_,black]),
+  !.
 
 % canMoveTo(+AllPieces, +Color, +Position)
 % Checks if a piece can move to the given Position. Color speciefies a
