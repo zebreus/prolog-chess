@@ -10,12 +10,17 @@ move(AllPieces, [CurrentX, CurrentY, pawn, white], [X, Y]) :-
   X is CurrentX,
   Y is CurrentY+1,
   Y =< 8,
-  canMoveTo(AllPieces, black, [X,Y]).
+  canMoveTo(AllPieces, none, [X,Y]).
+
 
 % canMoveTo(+AllPieces, +Color, +Position)
+% Checks if a piece can move to the given Position. Color speciefies a
+% color that can be beaten by the moved piece
 canMoveTo(AllPieces, Color, Position) :-
   collision(AllPieces, Position, CollisionPiece),
+  !,
   canMoveTo(CollisionPiece, Color).
+
 canMoveTo(CollisionPiece, _) :-
   CollisionPiece = [], !.
 canMoveTo(CollisionPiece, Color) :-
@@ -27,7 +32,7 @@ collision([ThisPiece | Rest], [X,Y], Piece) :-
   ThisPiece = [ThisX | [ThisY|_] ],
   ThisX = X,
   ThisY = Y,
-  Piece = ThisPiece;
+  Piece = ThisPiece, !;
   collision(Rest,[X,Y],Piece).
 
 % input(-XStart, -YStart, -XEnd, -YEnd)
