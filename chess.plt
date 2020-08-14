@@ -1,3 +1,44 @@
+:- begin_tests(helpers).
+:- include(chess).
+
+test(otherColorCorrect) :-
+    otherColor(black, white),
+    otherColor(white, black),
+    otherColor(none, none).
+
+test(otherColorNotIncorrect, [fail]) :-
+    otherColor(black, black);
+    otherColor(none, black);
+    otherColor(none, white);
+    otherColor(white, white).
+
+test(inBoundsCorrect) :-
+    inBounds([1,1]),
+    inBounds([1,8]),
+    inBounds([8,1]),
+    inBounds([8,8]),
+    inBounds([4,4]).
+
+test(inBoundsNotIncorrect, [fail]) :-
+    inBounds([0,4]);
+    inBounds([9,4]);
+    inBounds([4,0]);
+    inBounds([4,9]);
+    inBounds([100,100]);
+    inBounds([100,-100]);
+    inBounds([-100,100]);
+    inBounds([-100,-100]);
+    inBounds([0,0]).
+
+test(getDirectionCorrect) :-
+    getDirection(white, 1),
+    getDirection(black, -1).
+
+test(getDirectionNoneFails, [fail]) :-
+    getDirection(none, _).
+
+:- end_tests(helpers).
+
 :- begin_tests(move).
 :- include(chess).
 

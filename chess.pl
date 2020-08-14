@@ -1,4 +1,15 @@
+% otherColor(+ColorA, +ColorB)
+otherColor(black, white).
+otherColor(white, black).
+otherColor(none, none).
 
+% inBounds(+Position)
+inBounds([X,Y]) :-
+  X > 0,
+  Y > 0,
+  X < 9,
+  Y < 9.
+  
 % getDirection(+Color, -Direction)
 getDirection(white, 1).
 getDirection(black, -1).
@@ -8,7 +19,7 @@ getDirection(black, -1).
 move(AllPieces, [CurrentX, CurrentY, pawn, Color], [X, Y]) :-
   getDirection(Color, Direction),
   Y is CurrentY+Direction,
-  Y =< 8,
+  inBounds([CurrentX, Y]), % X should not be able to go oob, because there should be a piece to beat there
   (
     X is CurrentX,
     canMoveTo(AllPieces, none, [X,Y]),
