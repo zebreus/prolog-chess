@@ -1,31 +1,24 @@
 
-%bauer([_,_,_,_, _,_,_,_ ,_,_,_,_ ,X])
-testCol(Position) :-
-  move([ [4,5,pawn,white], [4,7,pawn,black] ], [4,6,pawn,white], Position).
-
-
+% getDirection(+Color, -Direction)
+getDirection(white, 1).
+getDirection(black, -1).
 
 % move(AllPieces, Piece, Position)
-move(AllPieces, [CurrentX, CurrentY, pawn, white], [X, Y]) :-
-  X is CurrentX,
-  Y is CurrentY+1,
-  Y =< 8,
-  canMoveTo(AllPieces, none, [X,Y]),
-  !.
 
-move(AllPieces, [CurrentX, CurrentY, pawn, white], [X, Y]) :-
-  X is CurrentX+1,
-  Y is CurrentY+1,
+move(AllPieces, [CurrentX, CurrentY, pawn, Color], [X, Y]) :-
+  getDirection(Color, Direction),
+  Y is CurrentY+Direction,
   Y =< 8,
-  collision(AllPieces, [X,Y], [X,Y,_,black]),
-  !.
-
-move(AllPieces, [CurrentX, CurrentY, pawn, white], [X, Y]) :-
-  X is CurrentX-1,
-  Y is CurrentY+1,
-  Y =< 8,
-  collision(AllPieces, [X,Y], [X,Y,_,black]),
-  !.
+  (
+    X is CurrentX,
+    canMoveTo(AllPieces, none, [X,Y]),
+    !;
+    (
+      X is CurrentX+1, !;
+      X is CurrentX-1
+    ),
+    collision(AllPieces, [X,Y], [X,Y,_,black])
+  ).
 
 % canMoveTo(+AllPieces, +Color, +Position)
 % Checks if a piece can move to the given Position. Color speciefies a
