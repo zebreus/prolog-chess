@@ -125,7 +125,7 @@ test(moveBlackPawnDontBeatBlack, [fail]) :-
     move([ [4,6,pawn,black], [5,5,pawn,black]], [4,6,pawn,black], [5, 5]);
     move([ [4,6,pawn,black], [3,5,pawn,black]], [4,6,pawn,black], [3, 5]).
 
-test(moveKing) :-
+test(moveKing, all(Color = [black, white])) :-
     availableColors(Color),
     move([ [4,4,king,Color]], [4,4,king,Color], [5, 3]),
     move([ [4,4,king,Color]], [4,4,king,Color], [5, 4]),
@@ -136,7 +136,7 @@ test(moveKing) :-
     move([ [4,4,king,Color]], [4,4,king,Color], [4, 3]),
     move([ [4,4,king,Color]], [4,4,king,Color], [4, 5]).
 
-test(moveKingBeatOtherColor) :-
+test(moveKingBeatOtherColor, all(Color = [black, white])) :-
     availableColors(Color),
     otherColor(Color, OtherColor),
     move([ [4,4,king,Color], [5,3,pawn,OtherColor]], [4,4,king,Color], [5, 3]),
@@ -150,7 +150,7 @@ test(moveKingBeatOtherColor) :-
 
 test(moveKingNotBeatSameColor, [fail]) :-
     availableColors(Color),
-    otherColor(Color, OtherColor),
+    (
     move([ [4,4,king,Color], [5,3,pawn,Color]], [4,4,king,Color], [5, 3]);
     move([ [4,4,king,Color], [5,4,pawn,Color]], [4,4,king,Color], [5, 4]);
     move([ [4,4,king,Color], [5,5,pawn,Color]], [4,4,king,Color], [5, 5]);
@@ -158,13 +158,16 @@ test(moveKingNotBeatSameColor, [fail]) :-
     move([ [4,4,king,Color], [3,4,pawn,Color]], [4,4,king,Color], [3, 4]);
     move([ [4,4,king,Color], [3,5,pawn,Color]], [4,4,king,Color], [3, 5]);
     move([ [4,4,king,Color], [4,3,pawn,Color]], [4,4,king,Color], [4, 3]);
-    move([ [4,4,king,Color], [4,5,pawn,Color]], [4,4,king,Color], [4, 5]).
+    move([ [4,4,king,Color], [4,5,pawn,Color]], [4,4,king,Color], [4, 5])
+    ).
 
-test(moveStaysInBounds) :-
+test(moveStaysInBounds, [fail]) :-
     between(1,8,X),
     between(1,8,Y),
+    availablePiece(Piece),
     move([[X,Y,Piece,Color]],[X,Y,Piece,Color],ReachedPosition),
-    inBounds(ReachedPosition).
+    not(inBounds(ReachedPosition)),
+    !.
 
 :- end_tests(move).
 
