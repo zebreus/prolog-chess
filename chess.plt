@@ -160,6 +160,12 @@ test(moveKingNotBeatSameColor, [fail]) :-
     move([ [4,4,king,Color], [4,3,pawn,Color]], [4,4,king,Color], [4, 3]);
     move([ [4,4,king,Color], [4,5,pawn,Color]], [4,4,king,Color], [4, 5]).
 
+test(moveStaysInBounds) :-
+    between(1,8,X),
+    between(1,8,Y),
+    move([[X,Y,Piece,Color]],[X,Y,Piece,Color],ReachedPosition),
+    inBounds(ReachedPosition).
+
 :- end_tests(move).
 
 % Test all collision related rules
