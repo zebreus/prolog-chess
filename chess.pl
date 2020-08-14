@@ -24,11 +24,12 @@ move(AllPieces, [CurrentX, CurrentY, pawn, Color], [X, Y]) :-
     X is CurrentX,
     canMoveTo(AllPieces, none, [X,Y]),
     !;
+    otherColor(Color, OtherColor),
     (
       X is CurrentX+1, !;
       X is CurrentX-1
     ),
-    collision(AllPieces, [X,Y], [X,Y,_,black])
+    collision(AllPieces, [X,Y], [X,Y,_,OtherColor])
   ).
 
 % canMoveTo(+AllPieces, +Color, +Position)

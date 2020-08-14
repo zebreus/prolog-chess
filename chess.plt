@@ -48,8 +48,6 @@ test(moveWhitePawnFree) :-
 test(moveWhitePawnTooFar, [fail]) :-
     move([ [4,8,pawn,white]], [4,8,pawn,white], [4,9]).
 
-test(moveWhitePawnSanityCheck) :-
-    move([ [4,4,pawn,white]], [4,4,pawn,white], [4,5]).
 test(moveWhitePawnSanityCheck, [fail]) :-
     move([ [4,4,pawn,white]], [4,4,pawn,white], [4,6]);
     move([ [4,4,pawn,white]], [4,4,pawn,white], [4,3]);
@@ -77,6 +75,41 @@ test(moveWhitePawnBeatBlack) :-
 test(moveWhitePawnDontBeatWhite, [fail]) :-
     move([ [4,6,pawn,white], [5,7,pawn,white]], [4,6,pawn,white], [5, 7]);
     move([ [4,6,pawn,white], [3,7,pawn,white]], [4,6,pawn,white], [3, 7]).
+
+test(moveBlackPawnFree) :-
+    move([ [4,6,pawn,black]], [4,6,pawn,black], [4,5]).
+
+test(moveWhitePawnTooFar, [fail]) :-
+    move([ [4,1,pawn,black]], [4,1,pawn,black], [4,0]).
+
+test(moveBlackPawnSanityCheck, [fail]) :-
+    move([ [4,4,pawn,black]], [4,4,pawn,black], [4,2]);
+    move([ [4,4,pawn,black]], [4,4,pawn,black], [4,5]);
+    move([ [4,4,pawn,black]], [4,4,pawn,black], [3,3]);
+    move([ [4,4,pawn,black]], [4,4,pawn,black], [3,4]);
+    move([ [4,4,pawn,black]], [4,4,pawn,black], [3,5]);
+    move([ [4,4,pawn,black]], [4,4,pawn,black], [5,3]);
+    move([ [4,4,pawn,black]], [4,4,pawn,black], [5,4]);
+    move([ [4,4,pawn,black]], [4,4,pawn,black], [5,5]).
+
+test(moveBlackPawnBlocked, [fail]) :-
+    move([ [4,6,pawn,black], [4,5,pawn,white]], [4,6,pawn,black], [4,5]);
+    move([ [4,6,pawn,black], [4,5,pawn,black]], [4,6,pawn,black], [4,5]).
+
+test(moveBlackPawnBeatNotAvailable, [fail]) :-
+    move([ [4,6,pawn,black]], [4,6,pawn,black], [5,5]);
+    move([ [4,6,pawn,black]], [4,6,pawn,black], [3,5]);
+    move([ [4,6,pawn,black], [5,5,pawn,white]], [4,6,pawn,black], [3, 5]);
+    move([ [4,6,pawn,black], [3,5,pawn,white]], [4,6,pawn,black], [5, 5]).
+
+test(moveBlackPawnBeatWhite) :-
+    move([ [4,6,pawn,black], [5,5,pawn,white]], [4,6,pawn,black], [5, 5]),
+    move([ [4,6,pawn,black], [3,5,pawn,white]], [4,6,pawn,black], [3, 5]).
+
+test(moveBlackPawnDontBeatBlack, [fail]) :-
+    move([ [4,6,pawn,black], [5,5,pawn,black]], [4,6,pawn,black], [5, 5]);
+    move([ [4,6,pawn,black], [3,5,pawn,black]], [4,6,pawn,black], [3, 5]).
+
 
 :- end_tests(move).
 
