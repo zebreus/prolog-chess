@@ -44,7 +44,28 @@ move(AllPieces, [CurrentX, CurrentY, pawn, Color], [X, Y]) :-
       X is CurrentX-1
     ),
     collision(AllPieces, [X,Y], [X,Y,_,OtherColor])
-  ).
+  ),
+  !.
+
+move(AllPieces, [CurrentX, CurrentY, king, Color], [X, Y]) :-
+  otherColor(Color, OtherColor),
+  (
+    between(-1,1,XMod),
+    X is CurrentX + XMod,
+    (
+      Y is CurrentY + 1;
+      Y is CurrentY - 1
+    );
+    Y is CurrentY,
+    (
+      X is CurrentX + 1;
+      X is CurrentX - 1
+    )
+  ),
+  inBounds([X,Y]),
+  canMoveTo(AllPieces, OtherColor, [X,Y]),
+  !.
+
 
 % canMoveTo(+AllPieces, +Color, +Position)
 % Checks if a piece can move to the given Position. Color speciefies a
