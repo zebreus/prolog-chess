@@ -23,7 +23,7 @@ inBounds([X,Y]) :-
   Y > 0,
   X < 9,
   Y < 9.
-  
+
 % getDirection(+Color, -Direction)
 getDirection(white, 1).
 getDirection(black, -1).
@@ -90,6 +90,97 @@ move(AllPieces, [CurrentX, CurrentY, knight, Color], [X,Y]) :-
   canMoveTo(AllPieces, OtherColor, [X,Y]),
   !.
 
+move(AllPieces, [CurrentX, CurrentY, bishop, Color], [X,Y]) :-
+  otherColor(Color, OtherColor),
+  between(1,7,Dist),
+  (
+    (
+      X is CurrentX - Dist,
+      Y is CurrentY - Dist
+    );
+    (
+      X is CurrentX + Dist,
+      Y is CurrentY + Dist
+    );
+    (
+      X is CurrentX + Dist,
+      Y is CurrentY - Dist
+    );
+    (
+      X is CurrentX - Dist,
+      Y is CurrentY + Dist
+    )
+  ),
+  inBounds([X,Y]),
+  canMoveTo(AllPieces, OtherColor, [X,Y]),
+  !.
+
+move(AllPieces, [CurrentX, CurrentY, rook, Color], [X,Y]) :-
+  otherColor(Color, OtherColor),
+  between(1,7,Dist),
+  (
+    (
+      X is CurrentX + Dist;
+      X is CurrentX - Dist
+    ),
+    (
+      Y is CurrentY
+    );
+    (
+      Y is CurrentY + Dist;
+      Y is CurrentY - Dist
+    ),
+    (
+      X is CurrentX
+    )
+  ),
+  inBounds([X,Y]),
+  canMoveTo(AllPieces, OtherColor, [X,Y]),
+  !.
+
+move(AllPieces, [CurrentX, CurrentY, queen, Color], [X,Y]) :-
+  otherColor(Color, OtherColor),
+  (
+    between(1,7,Dist),
+    (
+      (
+        X is CurrentX + Dist;
+        X is CurrentX - Dist
+      ),
+      (
+        Y is CurrentY
+      );
+      (
+        Y is CurrentY + Dist;
+        Y is CurrentY - Dist
+      ),
+      (
+        X is CurrentX
+      )
+    );
+    between(1,7,DistDiag),
+    (
+      (
+        X is CurrentX - DistDiag,
+        Y is CurrentY - DistDiag
+      );
+      (
+        X is CurrentX + DistDiag,
+        Y is CurrentY + DistDiag
+      );
+      (
+        X is CurrentX + DistDiag,
+        Y is CurrentY - DistDiag
+      );
+      (
+        X is CurrentX - DistDiag,
+        Y is CurrentY + DistDiag
+      )
+    )
+  ),
+  inBounds([X,Y]),
+  canMoveTo(AllPieces, OtherColor, [X,Y]),
+  !.
 
 % canMoveTo(+AllPieces, +Color, +Position)
 % Checks if a piece can move to the given Position. Color speciefies a
