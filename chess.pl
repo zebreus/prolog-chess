@@ -182,6 +182,11 @@ move(AllPieces, [CurrentX, CurrentY, queen, Color], [X,Y]) :-
   canMoveTo(AllPieces, OtherColor, [X,Y]),
   !.
 
+movePieceToPosition(AllPieces, OldX, OldY, Piece, Color, NewX, NewY, NewAllPieces) :-
+  select([OldX, OldY, Piece, Color], AllPieces, ReducedAllPieces),
+  NewPiece = [NewX, NewY, Piece, Color],
+  NewAllPieces = [NewPiece | ReducedAllPieces].
+
 % canMoveTo(+AllPieces, +Color, +Position)
 % Checks if a piece can move to the given Position. Color speciefies a
 % color that can be beaten by the moved piece
@@ -206,17 +211,19 @@ collision([ThisPiece | Rest], [X,Y], Piece) :-
 
 % input(-XStart, -YStart, -XEnd, -YEnd)
 % Gets valid user input
-input(XStart, YStart, XEnd, YEnd) :-
-  readInput(XStart, YStart, XEnd, YEnd),
+input(XStart, YStart, XEnd, YEnd, Color) :-
+  readInput(XStart, YStart, XEnd, YEnd, Color),
   checkInput(XStart, YStart, XEnd, YEnd), !.
-input(XStart, YStart, XEnd, YEnd) :-
+input(XStart, YStart, XEnd, YEnd, Color) :-
   write('Invalid input, please check that you have the right format!'),nl,
-  input(XStart, YStart, XEnd, YEnd).
+  input(XStart, YStart, XEnd, YEnd, Color).
 
 % readInput(-XStart, -YStart, -XEnd, -YEnd)
 % Reads and parses the input from the user
-readInput(XStart, YStart, XEnd, YEnd) :-
-  write('Please enter your next move [Format: "A2,A4".]:'), nl,
+readInput(XStart, YStart, XEnd, YEnd, Color) :-
+  write('Please enter your next move for '),
+  write(Color),
+  write(' [Format: "A2,A4".]:'), nl,
   read(Input),
   string_codes(Input, [InputXS|[InputYS|[_|[InputXE|[InputYE|_]]]]]),
   XStart is InputXS - 64, XEnd is InputXE - 64,
@@ -230,7 +237,6 @@ checkInput(XS, YS, XE, YE) :-
   YS >= 1, YS =< 8,
   XE >= 1, XE =< 8,
   YE >= 1, YE =< 8.
-  % Add further checks here
 
 % printBoard(+AllPieces)
 % Outputs the board in a formatted way
@@ -251,20 +257,21 @@ printBoardSquares(_, 9, _) :- !.
 printBoardSquares(AllPieces, XCoord, YCoord) :-
   % This is horribly inefficent, as is goes through AllPieces for every sqare to
   % find if any one is matching, please correct this if you have ideas
-  findPieceOnSquare(AllPieces, XCoord, YCoord, Color, Piece),
-  printPiece(Color, Piece),
+  % Use something like member(X, [One])....
+  findPieceOnSquare(AllPieces, XCoord, YCoord, Piece, Color),
+  printPiece(Piece, Color),
   NewXCoord is XCoord + 1,
   printBoardSquares(AllPieces, NewXCoord, YCoord).
 
 findPieceOnSquare([], _, _, no, piece) :- !.
-findPieceOnSquare([[XCoord, YCoord, Color, Piece] | _], XCoord, YCoord, Color, Piece) :- !.
-findPieceOnSquare([_ | RestPieces], XCoord, YCoord, Color, Piece) :-
-  findPieceOnSquare(RestPieces, XCoord, YCoord, Color, Piece), !.
+findPieceOnSquare([[XCoord, YCoord, Piece, Color] | _], XCoord, YCoord, Piece, Color) :- !.
+findPieceOnSquare([_ | RestPieces], XCoord, YCoord, Piece, Color) :-
+  findPieceOnSquare(RestPieces, XCoord, YCoord, Piece, Color), !.
 
 % printPiece(+Color, +Piece)
 % Prints a piece
 printPiece('no','piece') :- write('      |'), !.
-printPiece(Color, Piece) :-
+printPiece(Piece, Color) :-
   printPieceColor(Color),
   printPieceKind(Piece),
   write('|').
@@ -283,18 +290,31 @@ printPieceKind(rook) :- write('RO '), !.
 printPieceKind(queen) :- write('QU '), !.
 printPieceKind(king) :- write('KI '), !.
 
-printStartBoard :-
+getStartBoard(AllPieces) :-
   AllPieces = [
-    [1,8,black,rook], [2,8,black,knight], [3,8,black,bishop], [4,8,black,queen],
-    [5,8,black,king], [6,8,black,bishop], [7,8,black,knight], [8,8,black,rook],
+    [1,8,rook,black], [2,8,knight,black], [3,8,bishop,black], [4,8,queen,black],
+    [5,8,king,black], [6,8,bishop,black], [7,8,knight,black], [8,8,rook,black],
 
-    [1,7,black,pawn], [2,7,black,pawn], [3,7,black,pawn], [4,7,black,pawn],
-    [5,7,black,pawn], [6,7,black,pawn], [7,7,black,pawn], [8,7,black,pawn],
+    [1,7,pawn,black], [2,7,pawn,black], [3,7,pawn,black], [4,7,pawn,black],
+    [5,7,pawn,black], [6,7,pawn,black], [7,7,pawn,black], [8,7,pawn,black],
 
-    [1,2,white,pawn], [2,2,white,pawn], [3,2,white,pawn], [4,2,white,pawn],
-    [5,2,white,pawn], [6,2,white,pawn], [7,2,white,pawn], [8,2,white,pawn],
+    [1,2,pawn,white], [2,2,pawn,white], [3,2,pawn,white], [4,2,pawn,white],
+    [5,2,pawn,white], [6,2,pawn,white], [7,2,pawn,white], [8,2,pawn,white],
 
-    [1,1,white,rook], [2,1,white,knight], [3,1,white,bishop], [4,1,white,queen],
-    [5,1,white,king], [6,1,white,bishop], [7,1,white,knight], [8,1,white,rook]
-    ],
-  printBoard(AllPieces).
+    [1,1,rook,white], [2,1,knight,white], [3,1,bishop,white], [4,1,queen,white],
+    [5,1,king,white], [6,1,bishop,white], [7,1,knight,white], [8,1,rook,white]
+    ].
+
+startGame :- nl,
+  write('Welcome to Chess! You are playing white (and for the moment black too) and start.'),nl,
+  getStartBoard(AllPieces),
+  gameStep(AllPieces, white).
+
+gameStep(AllPieces, Color) :-
+  printBoard(AllPieces),
+  input(XStart, YStart, XEnd, YEnd, Color),
+  findPieceOnSquare(AllPieces, XStart, YStart, Piece, Color),
+  move(AllPieces, [XStart, YStart, Piece, Color], [XEnd, YEnd]),
+  movePieceToPosition(AllPieces, XStart, YStart, Piece, Color, XEnd, YEnd, NewAllPieces),
+  otherColor(Color, NewColor),
+  gameStep(NewAllPieces, NewColor).
