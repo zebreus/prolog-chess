@@ -45,16 +45,14 @@ move(AllPieces, [CurrentX, CurrentY, pawn, Color], [X, Y]) :-
   inBounds([CurrentX, Y]), % X should not be able to go oob, because there should be a piece to beat there
   (
     X is CurrentX,
-    canMoveTo(AllPieces, none, [X,Y]),
-    !;
+    canMoveTo(AllPieces, none, [X,Y]);
     otherColor(Color, OtherColor),
     (
-      X is CurrentX+1, !;
+      X is CurrentX+1;
       X is CurrentX-1
     ),
     collision(AllPieces, [X,Y], [X,Y,_,OtherColor])
-  ),
-  !.
+  ).
 
 move(AllPieces, [CurrentX, CurrentY, king, Color], [X, Y]) :-
   otherColor(Color, OtherColor),
@@ -72,8 +70,7 @@ move(AllPieces, [CurrentX, CurrentY, king, Color], [X, Y]) :-
     )
   ),
   inBounds([X,Y]),
-  canMoveTo(AllPieces, OtherColor, [X,Y]),
-  !.
+  canMoveTo(AllPieces, OtherColor, [X,Y]).
 
 move(AllPieces, [CurrentX, CurrentY, knight, Color], [X,Y]) :-
   otherColor(Color, OtherColor),
@@ -96,8 +93,7 @@ move(AllPieces, [CurrentX, CurrentY, knight, Color], [X,Y]) :-
     )
   ),
   inBounds([X,Y]),
-  canMoveTo(AllPieces, OtherColor, [X,Y]),
-  !.
+  canMoveTo(AllPieces, OtherColor, [X,Y]).
 
 move(AllPieces, [CurrentX, CurrentY, bishop, Color], [X,Y]) :-
   otherColor(Color, OtherColor),
@@ -123,20 +119,6 @@ move(AllPieces, [CurrentX, CurrentY, bishop, Color], [X,Y]) :-
   inBounds([X,Y]),
   canMoveTo(AllPieces, OtherColor, [X,Y]).
 
-move(AllPieces, [CurrentX, CurrentY, queen, Color], [X,Y]) :-
-  move(AllPieces, [CurrentX, CurrentY, rook, Color], [X,Y]);
-  move(AllPieces, [CurrentX, CurrentY, bishop, Color], [X,Y]).
-
-movePieceToPosition(AllPieces, OldX, OldY, Piece, Color, NewX, NewY, NewAllPieces) :-
-  select([OldX, OldY, Piece, Color], AllPieces, ReducedAllPieces),
-  NewPiece = [NewX, NewY, Piece, Color],
-  NewAllPieces = [NewPiece | ReducedAllPieces],
-  (
-    otherColor(Color, OtherColor);
-    otherColor(Color, OtherColor),
-    select([OldX, OldY, _, OtherColor], AllPieces, ReducedAllPieces)
-  ).
-
 move(AllPieces, [CurrentX, CurrentY, rook, Color], [X,Y]) :-
   otherColor(Color, OtherColor),
   (
@@ -156,6 +138,19 @@ move(AllPieces, [CurrentX, CurrentY, rook, Color], [X,Y]) :-
   nextPieceWest(AllPieces, [CurrentX,CurrentY], [MinX, _, _, _]),
   X >= MinX,
   canMoveTo(AllPieces, OtherColor, [X,Y]).
+
+move(AllPieces, [CurrentX, CurrentY, queen, Color], [X,Y]) :-
+  move(AllPieces, [CurrentX, CurrentY, rook, Color], [X,Y]);
+  move(AllPieces, [CurrentX, CurrentY, bishop, Color], [X,Y]).
+
+% canResultIn(+AllPieces, +Piece, +Position, -Board)
+% checks if moving piece to position results in Board
+canResultIn(AllPieces, [CurrentX, CurrentY, Piece, Color], [TargetX, TargetY], Board) :-
+  member([CurrentX, CurrentY, Piece, Color], AllPieces),
+  move(AllPieces, [CurrentX, CurrentY, Piece, Color], [TargetX, TargetY]),
+  otherColor(Color, OtherColor),
+  delete(AllPieces, [TargetX,TargetY,_,OtherColor], ClearedBoard),
+  select([CurrentX, CurrentY, Piece, Color], ClearedBoard, [TargetX, TargetY, Piece, Color], Board).
 
 % pieceNorthOf(+AllPieces, +Position, -Piece)
 % Checks if Piece is North of Position
@@ -405,6 +400,6 @@ gameStep(AllPieces, Color) :-
   input(XStart, YStart, XEnd, YEnd, Color),
   findPieceOnSquare(AllPieces, XStart, YStart, Piece, Color),
   move(AllPieces, [XStart, YStart, Piece, Color], [XEnd, YEnd]),
-  movePieceToPosition(AllPieces, XStart, YStart, Piece, Color, XEnd, YEnd, NewAllPieces),
+  canResultIn(AllPieces, [XStart, YStart, Piece, Color], [XEnd, YEnd], NewAllPieces),
   otherColor(Color, NewColor),
   gameStep(NewAllPieces, NewColor).
