@@ -1,3 +1,12 @@
+% will be used in minimax
+% piecePoints(-Piece, -Value).
+piecePoints(queen, 9).
+piecePoints(rook, 5).
+piecePoints(bishop, 3).
+piecePoints(knight, 3).
+piecePoints(pawn, 1).
+piecePoints(king, 100000).
+
 % otherColor(+ColorA, +ColorB)
 otherColor(black, white).
 otherColor(white, black).
