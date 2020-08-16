@@ -192,6 +192,59 @@ movePieceToPosition(AllPieces, OldX, OldY, Piece, Color, NewX, NewY, NewAllPiece
     select([OldX, OldY, _, OtherColor], AllPieces, ReducedAllPieces)
   ).
 
+% pieceNorthOf(+AllPieces, +Position, -Piece)
+% Checks if Piece is North of Position
+pieceNorthOf(AllPieces, [X, Y], Piece) :-
+  member(Piece, AllPieces),
+  Piece = [X, CheckY, _, _],
+  CheckY > Y,
+  CheckY =< 9;
+  Piece = [X,9,none,none].
+
+pieceEastOf(AllPieces, [X, Y], Piece) :-
+  member(Piece, AllPieces),
+  Piece = [CheckX, Y, _, _],
+  CheckX > X ,
+  CheckX =< 9;
+  Piece = [9,Y,none,none].
+
+pieceSouthOf(AllPieces, [X, Y], Piece) :-
+  member(Piece, AllPieces),
+  Piece = [X, CheckY, _, _],
+  CheckY < Y,
+  CheckY >= 0;
+  Piece = [X,0,none,none].
+
+pieceWestOf(AllPieces, [X, Y], Piece) :-
+  member(Piece, AllPieces),
+  Piece = [CheckX, Y, _, _],
+  CheckX < X,
+  CheckX >= 0;
+  Piece = [0,Y,none,none].
+
+
+% nextPieceNorth(+AllPieces, +Position, -Piece)
+% The closest piece north of the given position
+nextPieceNorth(AllPieces, [X, Y], Piece) :-
+  findall(C, pieceNorthOf(AllPieces, [X, Y], C), Pieces),
+  sort(2, @<, Pieces, SortedPieces),
+  SortedPieces = [Piece | _].
+
+nextPieceEast(AllPieces, [X, Y], Piece) :-
+  findall(C, pieceEastOf(AllPieces, [X, Y], C), Pieces),
+  sort(1, @<, Pieces, SortedPieces),
+  SortedPieces = [Piece | _].
+
+nextPieceSouth(AllPieces, [X, Y], Piece) :-
+  findall(C, pieceSouthOf(AllPieces, [X, Y], C), Pieces),
+  sort(2, @>, Pieces, SortedPieces),
+  SortedPieces = [Piece | _].
+
+nextPieceWest(AllPieces, [X, Y], Piece) :-
+  findall(C, pieceWestOf(AllPieces, [X, Y], C), Pieces),
+  sort(1, @>, Pieces, SortedPieces),
+  SortedPieces = [Piece | _].
+
 % canMoveTo(+AllPieces, +Color, +Position)
 % Checks if a piece can move to the given Position. Color speciefies a
 % color that can be beaten by the moved piece
