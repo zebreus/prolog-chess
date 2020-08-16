@@ -395,6 +395,12 @@ startGame :- nl,
   getStartBoard(AllPieces),
   gameStep(AllPieces, white).
 
+printAllStates :-
+  write('hi'),
+  getStartBoard(AllPieces),
+  canResultIn(AllPieces, [_, _, _, white], [_, _], NewAllPieces),
+  printBoard(NewAllPieces).
+
 gameStep(AllPieces, Color) :-
   printBoard(AllPieces),
   input(XStart, YStart, XEnd, YEnd, Color),
