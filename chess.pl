@@ -54,6 +54,14 @@ move(AllPieces, [CurrentX, CurrentY, pawn, Color], [X, Y]) :-
     collision(AllPieces, [X,Y], [X,Y,_,OtherColor])
   ).
 
+% pawn initial move
+move(AllPieces, [CurrentX, 2, pawn, white], [CurrentX, 4]) :-
+  canMoveTo(AllPieces, none, [CurrentX,3]),
+  canMoveTo(AllPieces, none, [CurrentX,4]).
+move(AllPieces, [CurrentX, 7, pawn, black], [CurrentX, 5]) :-
+  canMoveTo(AllPieces, none, [CurrentX,6]),
+  canMoveTo(AllPieces, none, [CurrentX,5]).
+
 move(AllPieces, [CurrentX, CurrentY, king, Color], [X, Y]) :-
   otherColor(Color, OtherColor),
   (

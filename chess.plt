@@ -68,6 +68,14 @@ test(moveStaysInBounds, [fail]) :-
 test(moveWhitePawnFree) :-
   move([ [4,6,pawn,white]], [4,6,pawn,white], [4,7]).
 
+test(moveWhitePawnTwoAtInitial) :-
+  move([ [4,2,pawn,white]], [4,2,pawn,white], [4,4]).
+
+test(moveWhitePawnInitialOnlyAt, [fail]) :-
+  move([ [4,3,pawn,white]], [4,3,pawn,white], [4,5]);
+  move([ [4,1,pawn,white]], [4,1,pawn,white], [4,3]);
+  move([ [2,4,pawn,white]], [2,4,pawn,white], [2,6]).
+
 test(moveWhitePawnTooFar, [fail]) :-
   move([ [4,8,pawn,white]], [4,8,pawn,white], [4,9]).
 
@@ -101,6 +109,14 @@ test(moveWhitePawnDontBeatWhite, [fail]) :-
 
 test(moveBlackPawnFree) :-
   move([ [4,6,pawn,black]], [4,6,pawn,black], [4,5]).
+
+test(moveBlackPawnTwoAtInitial) :-
+  move([ [4,7,pawn,black]], [4,7,pawn,black], [4,5]).
+
+test(moveBlackPawnInitialOnlyAt, [fail]) :-
+  move([ [4,6,pawn,black]], [4,6,pawn,black], [4,4]);
+  move([ [4,8,pawn,black]], [4,8,pawn,black], [4,6]);
+  move([ [2,5,pawn,black]], [2,5,pawn,black], [2,3]).
 
 test(moveWhitePawnTooFar, [fail]) :-
   move([ [4,1,pawn,black]], [4,1,pawn,black], [4,0]).
