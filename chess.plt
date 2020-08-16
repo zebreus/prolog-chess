@@ -332,4 +332,50 @@ test(canMoveToFree) :-
   canMoveTo([ [4,6,pawn,white], [4,7,pawn,black]], none, [1,1]),
   canMoveTo([ [4,6,pawn,white], [4,7,pawn,black]], none, [8,8]).
 
+test(nextPieceNorth) :-
+  nextPieceNorth([ [4,4,rook,black], [4,3,pawn,black] ], [4,4], [4,9,none,none]),
+  nextPieceNorth([ [4,4,rook,black], [4,5,pawn,black] ], [4,4], [4,5,pawn,black]),
+  nextPieceNorth([ [4,4,rook,black], [4,6,pawn,black] ], [4,4], [4,6,pawn,black]),
+  nextPieceNorth([ [4,4,rook,black], [4,7,pawn,black] ], [4,4], [4,7,pawn,black]),
+  nextPieceNorth([ [4,4,rook,black], [4,8,pawn,black] ], [4,4], [4,8,pawn,black]),
+  nextPieceNorth([ [4,4,rook,black], [4,8,pawn,black], [4,6,pawn,black] ], [4,4], [4,6,pawn,black]),
+  nextPieceNorth([ [4,4,rook,black], [3,6,pawn,black] ], [4,4], [4,9,none,none]).
+
+test(nextPieceNorthOnlyNextPiece, [fail]) :-
+  nextPieceNorth([ [4,4,rook,black], [4,5,pawn,black] ], [4,4], [4,9,none,none]).
+
+test(nextPieceEast) :-
+  nextPieceEast([ [4,4,rook,black], [3,4,pawn,black] ], [4,4], [9,4,none,none]),
+  nextPieceEast([ [4,4,rook,black], [5,4,pawn,black] ], [4,4], [5,4,pawn,black]),
+  nextPieceEast([ [4,4,rook,black], [6,4,pawn,black] ], [4,4], [6,4,pawn,black]),
+  nextPieceEast([ [4,4,rook,black], [7,4,pawn,black] ], [4,4], [7,4,pawn,black]),
+  nextPieceEast([ [4,4,rook,black], [8,4,pawn,black] ], [4,4], [8,4,pawn,black]),
+  nextPieceEast([ [4,4,rook,black], [8,4,pawn,black], [6, 4,pawn,black] ], [4,4], [6,4,pawn,black]),
+  nextPieceEast([ [4,4,rook,black], [6,3,pawn,black] ], [4,4], [9,4,none,none]).
+
+test(nextPieceEastOnlyNextPiece, [fail]) :-
+  nextPieceEast([ [4,4,rook,black], [5,4,pawn,black] ], [4,4], [9,4,none,none]).
+
+test(nextPieceSouthCorrect) :-
+  nextPieceSouth([ [4,4,rook,black], [4,5,pawn,black] ], [4,4], [4,0,none,none]),
+  nextPieceSouth([ [4,4,rook,black], [4,3,pawn,black] ], [4,4], [4,3,pawn,black]),
+  nextPieceSouth([ [4,4,rook,black], [4,2,pawn,black] ], [4,4], [4,2,pawn,black]),
+  nextPieceSouth([ [4,4,rook,black], [4,1,pawn,black] ], [4,4], [4,1,pawn,black]),
+  nextPieceSouth([ [4,4,rook,black], [4,1,pawn,black], [4,2,pawn,black] ], [4,4], [4,2,pawn,black]),
+  nextPieceSouth([ [4,4,rook,black], [3,3,pawn,black] ], [4,4], [4,0,none,none]).
+
+test(nextPieceSouthOnlyNextPiece, [fail]) :-
+  nextPieceSouth([ [4,4,rook,black], [4,3,pawn,black] ], [4,4], [4,0,none,none]).
+
+test(nextPieceWest) :-
+  nextPieceWest([ [4,4,rook,black], [5,4,pawn,black] ], [4,4], [0,4,none,none]),
+  nextPieceWest([ [4,4,rook,black], [3,4,pawn,black] ], [4,4], [3,4,pawn,black]),
+  nextPieceWest([ [4,4,rook,black], [2,4,pawn,black] ], [4,4], [2,4,pawn,black]),
+  nextPieceWest([ [4,4,rook,black], [1,4,pawn,black] ], [4,4], [1,4,pawn,black]),
+  nextPieceWest([ [4,4,rook,black], [4,1,pawn,black], [2,4,pawn,black] ], [4,4], [2,4,pawn,black]),
+  nextPieceWest([ [4,4,rook,black], [3,3,pawn,black] ], [4,4], [0,4,none,none]).
+
+test(nextPieceWestOnlyNextPiece, [fail]) :-
+  nextPieceWest([ [4,4,rook,black], [3,4,pawn,black] ], [4,4], [0,4,none,none]).
+
 :- end_tests(collisionDetection).
