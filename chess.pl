@@ -92,28 +92,27 @@ move(AllPieces, [CurrentX, CurrentY, knight, Color], [X,Y]) :-
 
 move(AllPieces, [CurrentX, CurrentY, bishop, Color], [X,Y]) :-
   otherColor(Color, OtherColor),
-  between(1,7,Dist),
+  between(1,7,Move),
   (
-    (
-      X is CurrentX - Dist,
-      Y is CurrentY - Dist
-    );
-    (
-      X is CurrentX + Dist,
-      Y is CurrentY + Dist
-    );
-    (
-      X is CurrentX + Dist,
-      Y is CurrentY - Dist
-    );
-    (
-      X is CurrentX - Dist,
-      Y is CurrentY + Dist
-    )
+    X is CurrentX+Move,
+    Y is CurrentY+Move,
+    nextPieceNorthEast(AllPieces, [CurrentX,CurrentY], [_, MaxY, _, _]),
+    Y =< MaxY;
+    X is CurrentX+Move,
+    Y is CurrentY-Move,
+    nextPieceSouthEast(AllPieces, [CurrentX,CurrentY], [MaxX, _, _, _]),
+    X =< MaxX;
+    X is CurrentX-Move,
+    Y is CurrentY-Move,
+    nextPieceSouthWest(AllPieces, [CurrentX,CurrentY], [_, MinY, _, _]),
+    Y >= MinY;
+    X is CurrentX-Move,
+    Y is CurrentY+Move,
+    nextPieceNorthWest(AllPieces, [CurrentX,CurrentY], [MinX, _, _, _]),
+    X >= MinX
   ),
   inBounds([X,Y]),
-  canMoveTo(AllPieces, OtherColor, [X,Y]),
-  !.
+  canMoveTo(AllPieces, OtherColor, [X,Y]).
 
 move(AllPieces, [CurrentX, CurrentY, queen, Color], [X,Y]) :-
   otherColor(Color, OtherColor),
