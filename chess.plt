@@ -294,6 +294,55 @@ test(moveRookBeforeOtherPiece, all(Color = _)) :-
   move([ [4,4,rook,Color], [4,1,pawn,OtherColor]], [4,4,rook,Color], [4, 2]),
   move([ [4,4,rook,Color], [4,1,pawn,OtherColor]], [4,4,rook,Color], [4, 3]).
 
+test(moveBishopFree, all(Color = [black, white])) :-
+  availableColors(Color),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [1, 1]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [2, 2]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [3, 3]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [5, 5]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [6, 6]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [7, 7]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [8, 8]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [1, 7]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [2, 6]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [3, 5]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [5, 3]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [6, 2]),
+  move([ [4,4,bishop,Color]], [4,4,bishop,Color], [7, 1]).
+
+test(moveBishopBeatOtherColor, all(Color = [black, white])) :-
+  availableColors(Color),
+  otherColor(Color, OtherColor),
+  move([ [4,4,bishop,Color], [1,1,pawn,OtherColor]], [4,4,bishop,Color], [1, 1]),
+  move([ [4,4,bishop,Color], [5,5,pawn,OtherColor]], [4,4,bishop,Color], [5, 5]),
+  move([ [4,4,bishop,Color], [8,8,pawn,OtherColor]], [4,4,bishop,Color], [8, 8]),
+  move([ [4,4,bishop,Color], [1,7,pawn,OtherColor]], [4,4,bishop,Color], [1, 7]),
+  move([ [4,4,bishop,Color], [5,3,pawn,OtherColor]], [4,4,bishop,Color], [5, 3]),
+  move([ [4,4,bishop,Color], [7,1,pawn,OtherColor]], [4,4,bishop,Color], [7, 1]).
+
+test(moveBishopNotBeatSameColor, [fail]) :-
+  availableColors(Color),
+  (
+  move([ [4,4,bishop,Color], [1,1,pawn,Color]], [4,4,bishop,Color], [1, 1]);
+  move([ [4,4,bishop,Color], [5,5,pawn,Color]], [4,4,bishop,Color], [5, 5]);
+  move([ [4,4,bishop,Color], [8,8,pawn,Color]], [4,4,bishop,Color], [8, 8]);
+  move([ [4,4,bishop,Color], [1,7,pawn,Color]], [4,4,bishop,Color], [1, 7]);
+  move([ [4,4,bishop,Color], [5,3,pawn,Color]], [4,4,bishop,Color], [5, 3]);
+  move([ [4,4,bishop,Color], [7,1,pawn,Color]], [4,4,bishop,Color], [7, 1])
+  ).
+
+test(moveBishopNotBeyondOtherPiece, [fail]) :-
+  availableColors(Color),
+  availableColors(OtherColor),
+  (
+  move([ [4,4,bishop,Color], [3,3,pawn,OtherColor]], [4,4,bishop,Color], [2, 2]);
+  move([ [4,4,bishop,Color], [5,5,pawn,OtherColor]], [4,4,bishop,Color], [6, 6]);
+  move([ [4,4,bishop,Color], [5,3,pawn,OtherColor]], [4,4,bishop,Color], [6, 2]);
+  move([ [4,4,bishop,Color], [3,5,pawn,OtherColor]], [4,4,bishop,Color], [2, 6]);
+  move([ [4,4,bishop,Color], [7,7,pawn,OtherColor]], [4,4,bishop,Color], [8, 8]);
+  move([ [4,4,bishop,Color], [3,5,pawn,OtherColor]], [4,4,bishop,Color], [1, 7])
+  ).
+
 
 :- end_tests(move).
 
