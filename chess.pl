@@ -219,6 +219,53 @@ pieceWestOf(AllPieces, [X, Y], Piece) :-
   CheckX >= 0;
   Piece = [0,Y,none,none].
 
+pieceNorthEastOf(AllPieces, [X, Y], Piece) :-
+  Dist is min(8-X,8-Y),
+  between(1, Dist, Offset),
+  PX is X+Offset,
+  PY is Y+Offset,
+  member(Piece, AllPieces),
+  Piece = [PX, PY, _, _];
+  Dist is min(8-X,8-Y),
+  LastX is X+Dist+1,
+  LastY is Y+Dist+1,
+  Piece = [LastX,LastY,none,none].
+
+pieceSouthEastOf(AllPieces, [X, Y], Piece) :-
+  Dist is min(8-X,Y-1),
+  between(1, Dist, Offset),
+  PX is X+Offset,
+  PY is Y-Offset,
+  member(Piece, AllPieces),
+  Piece = [PX, PY, _, _];
+  Dist is min(8-X,Y-1),
+  LastX is X+Dist+1,
+  LastY is Y-Dist-1,
+  Piece = [LastX,LastY,none,none].
+
+pieceSouthWestOf(AllPieces, [X, Y], Piece) :-
+  Dist is min(X-1,Y-1),
+  between(1, Dist, Offset),
+  PX is X-Offset,
+  PY is Y-Offset,
+  member(Piece, AllPieces),
+  Piece = [PX, PY, _, _];
+  Dist is min(X-1,Y-1),
+  LastX is X-Dist-1,
+  LastY is Y-Dist-1,
+  Piece = [LastX,LastY,none,none].
+
+pieceNorthWestOf(AllPieces, [X, Y], Piece) :-
+  Dist is min(X-1,8-Y),
+  between(1, Dist, Offset),
+  PX is X-Offset,
+  PY is Y+Offset,
+  member(Piece, AllPieces),
+  Piece = [PX, PY, _, _];
+  Dist is min(X-1,8-Y),
+  LastX is X-Dist-1,
+  LastY is Y+Dist+1,
+  Piece = [LastX,LastY,none,none].
 
 % nextPieceNorth(+AllPieces, +Position, -Piece)
 % The closest piece north of the given position
@@ -240,6 +287,26 @@ nextPieceSouth(AllPieces, [X, Y], Piece) :-
 nextPieceWest(AllPieces, [X, Y], Piece) :-
   findall(C, pieceWestOf(AllPieces, [X, Y], C), Pieces),
   sort(1, @>, Pieces, SortedPieces),
+  SortedPieces = [Piece | _].
+
+nextPieceNorthEast(AllPieces, [X, Y], Piece) :-
+  findall(C, pieceNorthEastOf(AllPieces, [X, Y], C), Pieces),
+  sort(2, @<, Pieces, SortedPieces),
+  SortedPieces = [Piece | _].
+
+nextPieceSouthEast(AllPieces, [X, Y], Piece) :-
+  findall(C, pieceSouthEastOf(AllPieces, [X, Y], C), Pieces),
+  sort(2, @>, Pieces, SortedPieces),
+  SortedPieces = [Piece | _].
+
+nextPieceSouthWest(AllPieces, [X, Y], Piece) :-
+  findall(C, pieceSouthWestOf(AllPieces, [X, Y], C), Pieces),
+  sort(2, @>, Pieces, SortedPieces),
+  SortedPieces = [Piece | _].
+
+nextPieceNorthWest(AllPieces, [X, Y], Piece) :-
+  findall(C, pieceNorthWestOf(AllPieces, [X, Y], C), Pieces),
+  sort(2, @<, Pieces, SortedPieces),
   SortedPieces = [Piece | _].
 
 % canMoveTo(+AllPieces, +Color, +Position)
