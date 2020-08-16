@@ -115,29 +115,6 @@ move(AllPieces, [CurrentX, CurrentY, bishop, Color], [X,Y]) :-
   canMoveTo(AllPieces, OtherColor, [X,Y]),
   !.
 
-move(AllPieces, [CurrentX, CurrentY, rook, Color], [X,Y]) :-
-  otherColor(Color, OtherColor),
-  between(1,7,Dist),
-  (
-    (
-      X is CurrentX + Dist;
-      X is CurrentX - Dist
-    ),
-    (
-      Y is CurrentY
-    );
-    (
-      Y is CurrentY + Dist;
-      Y is CurrentY - Dist
-    ),
-    (
-      X is CurrentX
-    )
-  ),
-  inBounds([X,Y]),
-  canMoveTo(AllPieces, OtherColor, [X,Y]),
-  !.
-
 move(AllPieces, [CurrentX, CurrentY, queen, Color], [X,Y]) :-
   otherColor(Color, OtherColor),
   (
@@ -191,6 +168,26 @@ movePieceToPosition(AllPieces, OldX, OldY, Piece, Color, NewX, NewY, NewAllPiece
     otherColor(Color, OtherColor),
     select([OldX, OldY, _, OtherColor], AllPieces, ReducedAllPieces)
   ).
+
+move(AllPieces, [CurrentX, CurrentY, rook, Color], [X,Y]) :-
+  otherColor(Color, OtherColor),
+  (
+    between(1,8,X),
+    X \= CurrentX,
+    Y = CurrentY;
+    between(1,8,Y),
+    Y \= CurrentY,
+    X = CurrentX
+  ),
+  nextPieceNorth(AllPieces, [CurrentX,CurrentY], [_, MaxY, _, _]),
+  Y =< MaxY,
+  nextPieceEast(AllPieces, [CurrentX,CurrentY], [MaxX, _, _, _]),
+  X =< MaxX,
+  nextPieceSouth(AllPieces, [CurrentX,CurrentY], [_, MinY, _, _]),
+  Y >= MinY,
+  nextPieceWest(AllPieces, [CurrentX,CurrentY], [MinX, _, _, _]),
+  X >= MinX,
+  canMoveTo(AllPieces, OtherColor, [X,Y]).
 
 % pieceNorthOf(+AllPieces, +Position, -Piece)
 % Checks if Piece is North of Position
