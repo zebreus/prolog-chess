@@ -185,7 +185,12 @@ move(AllPieces, [CurrentX, CurrentY, queen, Color], [X,Y]) :-
 movePieceToPosition(AllPieces, OldX, OldY, Piece, Color, NewX, NewY, NewAllPieces) :-
   select([OldX, OldY, Piece, Color], AllPieces, ReducedAllPieces),
   NewPiece = [NewX, NewY, Piece, Color],
-  NewAllPieces = [NewPiece | ReducedAllPieces].
+  NewAllPieces = [NewPiece | ReducedAllPieces],
+  (
+    otherColor(Color, OtherColor);
+    otherColor(Color, OtherColor),
+    select([OldX, OldY, _, OtherColor], AllPieces, ReducedAllPieces)
+  ).
 
 % canMoveTo(+AllPieces, +Color, +Position)
 % Checks if a piece can move to the given Position. Color speciefies a
