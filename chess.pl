@@ -465,6 +465,7 @@ getStartBoard(AllPieces) :-
 startGame :- nl,
   write('Welcome to Chess! You are playing white (and for the moment black too) and start.'),nl,
   getStartBoard(AllPieces),
+  printBoard(AllPieces),
   gameStep(AllPieces, white).
 
 printAllStates :-
@@ -485,8 +486,9 @@ gameStep(AllPieces, white) :-
   ).
 
 gameStep(AllPieces, black) :-
-  write('AI is supposed to do something here'), nl,
-  gameStep(AllPieces, white).
+  startMinMax(AllPieces, BestMove),
+  printBoard(BestMove),
+  gameStep(BestMove, white).
 
 %compareBoard(+MinMax, +BoardA, +ValueA, +BoardB, +ValueB, -BetterBoard, -BetterValue)
 compareBoard(max, BoardA, ValueA, _, ValueB, BoardA, ValueA) :-
@@ -528,4 +530,4 @@ translatePlayer(max, black).
 
 startMinMax(Board, BestBoard) :-
   findall(X, canResultIn(Board, [_,_,_,black], [_,_], X), AvailableBoards),
-  minMaxAlg(max, AvailableBoards, BestBoard, _, 0).
+  minMaxAlg(max, AvailableBoards, BestBoard, _, 2).
