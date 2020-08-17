@@ -473,17 +473,59 @@ printAllStates :-
   canResultIn(AllPieces, [_, _, _, white], [_, _], NewAllPieces),
   printBoard(NewAllPieces).
 
-  gameStep(AllPieces, white) :-
-    input(XStart, YStart, XEnd, YEnd, white),
-    (
-      member([XStart, YStart, Piece, white], AllPieces),
-      canResultIn(AllPieces, [XStart, YStart, Piece, white], [XEnd, YEnd], NewAllPieces),
-      printBoard(NewAllPieces),
-      gameStep(NewAllPieces,black);
-      write('This move is not possible!'), nl,
-      gameStep(AllPieces, white)
-    ).
+gameStep(AllPieces, white) :-
+  input(XStart, YStart, XEnd, YEnd, white),
+  (
+    member([XStart, YStart, Piece, white], AllPieces),
+    canResultIn(AllPieces, [XStart, YStart, Piece, white], [XEnd, YEnd], NewAllPieces),
+    printBoard(NewAllPieces),
+    gameStep(NewAllPieces,black);
+    write('This move is not possible!'), nl,
+    gameStep(AllPieces, white)
+  ).
 
-  gameStep(AllPieces, black) :-
-    write('AI is supposed to do something here'), nl,
-    gameStep(AllPieces, white).
+gameStep(AllPieces, black) :-
+  write('AI is supposed to do something here'), nl,
+  gameStep(AllPieces, white).
+
+%compareBoard(+MinMax, +BoardA, +ValueA, +BoardB, +ValueB, -BetterBoard, -BetterValue)
+compareBoard(max, BoardA, ValueA, _, ValueB, BoardA, ValueA) :-
+  ValueB =< ValueA.
+compareBoard(max, _, ValueA, BoardB, ValueB, BoardB, ValueB) :-
+  ValueB > ValueA.
+compareBoard(min, BoardA, ValueA, _, ValueB, BoardA, ValueA) :-
+  ValueB >= ValueA.
+compareBoard(min, _, ValueA, BoardB, ValueB, BoardB, ValueB) :-
+  ValueB < ValueA.
+
+% Chooses best move
+% minMaxAlg(+MinMax, +AllBoards, -BestBoard, -BestValue)
+minMaxAlg(min, [], [], 20000, _).
+minMaxAlg(max, [], [], -20000, _).
+
+minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue, 0) :-
+  boardScore(FirstBoard, Value),
+  minMaxAlg(MinMax, RestBoards, OtherBestBoard, OtherBestValue, 0),
+  compareBoard(MinMax, FirstBoard, Value, OtherBestBoard, OtherBestValue, BestBoard, BestValue).
+
+minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue, Depth) :-
+  Depth > 0,
+  minMaxAlg(MinMax, RestBoards, NeighbourBestBoard, NeighbourBestValue, Depth),
+  swapMinMax(MinMax,SwappedMinMax),
+  translatePlayer(SwappedMinMax, Player),
+  findall(X, canResultIn(FirstBoard, [_,_,_,Player], [_,_], X), AvailableBoards),
+  NDepth is Depth-1,
+  minMaxAlg(SwappedMinMax, AvailableBoards, _, OtherBestValue, NDepth),
+  compareBoard(MinMax, NeighbourBestBoard, NeighbourBestValue, FirstBoard, OtherBestValue, BestBoard, BestValue).
+
+% swapMinMax(+MinOrMax, TheOther)
+% Changes the MinMax atom.
+swapMinMax(max, min).
+swapMinMax(min, max).
+
+translatePlayer(min, white).
+translatePlayer(max, black).
+
+startMinMax(Board, BestBoard) :-
+  findall(X, canResultIn(Board, [_,_,_,black], [_,_], X), AvailableBoards),
+  minMaxAlg(max, AvailableBoards, BestBoard, _, 0).

@@ -71,7 +71,7 @@ play('O', Board) :-
 
 startMinMax(Board, BestBoard) :-
   findall(X, possibleMove(Board, X, 'O'), AvailableBoards),
-  minMaxAlg(max, AvailableBoards, BestBoard, _).
+  minMaxAlg(max, AvailableBoards, BestBoard, _, 0).
 
 % evalBoard(+Board, -Value)
 evalBoard([], 0).
@@ -97,19 +97,26 @@ compareBoard(min, _, ValueA, BoardB, ValueB, BoardB, ValueB) :-
 
 % Chooses best move
 % minMaxAlg(+MinMax, +AllBoards, -BestBoard, -BestValue)
-minMaxAlg(min, [], [], 2).
-minMaxAlg(max, [], [], -2).
-minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue) :-
+minMaxAlg(min, [], [], 2, _).
+minMaxAlg(max, [], [], -2, _).
+minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue, Depth) :-
   evalBoard(FirstBoard, Value),
-  minMaxAlg(MinMax, RestBoards, OtherBestBoard, OtherBestValue),
+  minMaxAlg(MinMax, RestBoards, OtherBestBoard, OtherBestValue, Depth),
   compareBoard(MinMax, FirstBoard, Value, OtherBestBoard, OtherBestValue, BestBoard, BestValue).
 
-minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue) :-
-  minMaxAlg(MinMax, RestBoards, NeighbourBestBoard, NeighbourBestValue),
+minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue, 0) :-
+  Value is 0,
+  minMaxAlg(MinMax, RestBoards, OtherBestBoard, OtherBestValue, 0),
+  compareBoard(MinMax, FirstBoard, Value, OtherBestBoard, OtherBestValue, BestBoard, BestValue).
+
+minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue, Depth) :-
+  Depth > 0,
+  minMaxAlg(MinMax, RestBoards, NeighbourBestBoard, NeighbourBestValue, Depth),
   swapMinMax(MinMax,SwappedMinMax),
   translatePlayer(SwappedMinMax, Player),
   findall(X, possibleMove(FirstBoard, X, Player), AvailableBoards),
-  minMaxAlg(SwappedMinMax, AvailableBoards, _, OtherBestValue),
+  NDepth is Depth+1,
+  minMaxAlg(SwappedMinMax, AvailableBoards, _, OtherBestValue, NDepth),
   compareBoard(MinMax, NeighbourBestBoard, NeighbourBestValue, FirstBoard, OtherBestValue, BestBoard, BestValue).
 
 % swapMinMax(+MinOrMax, TheOther)

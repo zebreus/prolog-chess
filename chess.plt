@@ -53,7 +53,7 @@ test(availableColorsCorrect) :-
 
 test(availableColorsNoneFails, [fail]) :-
   availableColors(none).
-  
+
 test(availablePiecesContainAll) :-
   availablePiece(king),
   availablePiece(queen),
@@ -678,3 +678,19 @@ test(nextPieceNorthWestOnlyNextPiece, [fail]) :-
   nextPieceNorthWest([ [4,4,rook,black], [3,5,pawn,black] ], [4,4], [0,8,none,none]).
 
 :- end_tests(collisionDetection).
+
+% Test all collision related rules
+:- begin_tests(miniMax).
+:- include(chess).
+
+test(miniMaxSimpleCheckmateTwoRooks) :-
+  findall(X, canResultIn([[3,1,king,white], [7,2,rook,black], [8,3,rook,black]], [_,_,_,black], [_,_], X), AvailableBoards),
+  minMaxAlg(max, AvailableBoards, BestBoard, _, 3),
+  BestBoard = [[3,1,king,white], [7,2,rook,black], [8,1,rook,black]].
+
+test(miniMaxSimpleCheckmateQueenRook) :-
+  findall(X, canResultIn([[1,1,king,white], [7,2,queen,black], [8,3,rook,black]], [_,_,_,black], [_,_], X), AvailableBoards),
+  minMaxAlg(max, AvailableBoards, BestBoard, _, 3),
+  BestBoard = [[1,1,king,white], [7,2,queen,black], [8,1,rook,black]].
+
+:- end_tests(miniMax).
