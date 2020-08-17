@@ -80,22 +80,6 @@ move(AllPieces, [CurrentX, CurrentY, king, Color], [X, Y]) :-
   inBounds([X,Y]),
   canMoveTo(AllPieces, OtherColor, [X,Y]).
 
-move(AllPieces, [5, 1, king, white], [1, 1]) :-
-  member([1,1,rook,white], AllPieces),
-  nextPieceEast(AllPieces, [1,1], [5,1,king,white]).
-
-move(AllPieces, [5, 8, king, black], [1, 8]) :-
-  member([1,8,rook,black], AllPieces),
-  nextPieceEast(AllPieces, [1,8], [5,8,king,black]).
-
-move(AllPieces, [5, 1, king, white], [8, 1]) :-
-  member([8,1,rook,white], AllPieces),
-  nextPieceWest(AllPieces, [8,1], [5,1,king,white]).
-
-move(AllPieces, [5, 8, king, black], [8, 8]) :-
-  member([8,8,rook,black], AllPieces),
-  nextPieceWest(AllPieces, [8,8], [5,8,king,black]).
-
 move(AllPieces, [CurrentX, CurrentY, knight, Color], [X,Y]) :-
   otherColor(Color, OtherColor),
   (
@@ -175,6 +159,30 @@ canResultIn(AllPieces, [CurrentX, CurrentY, Piece, Color], [TargetX, TargetY], B
   otherColor(Color, OtherColor),
   delete(AllPieces, [TargetX,TargetY,_,OtherColor], ClearedBoard),
   select([CurrentX, CurrentY, Piece, Color], ClearedBoard, [TargetX, TargetY, Piece, Color], Board).
+
+canResultIn(AllPieces, [5, 1, king, white], [1, 1], Board) :-
+  member([1,1,rook,white], AllPieces),
+  nextPieceEast(AllPieces, [1,1], [5,1,king,white]),
+  select([5, 1, king, white], AllPieces, [5, 1, rook, white], TempBoard),
+  select([1, 1, rook, white], TempBoard, [1, 1, king, white], Board).
+
+canResultIn(AllPieces, [5, 8, king, black], [1, 8], Board) :-
+  member([1,8,rook,black], AllPieces),
+  nextPieceEast(AllPieces, [1,8], [5,8,king,black]),
+  select([5, 8, king, black], AllPieces, [5, 8, rook, black], TempBoard),
+  select([1, 8, rook, black], TempBoard, [1, 8, king, black], Board).
+
+canResultIn(AllPieces, [5, 1, king, white], [8, 1], Board) :-
+  member([8,1,rook,white], AllPieces),
+  nextPieceWest(AllPieces, [8,1], [5,1,king,white]),
+  select([5, 1, king, white], AllPieces, [5, 1, rook, white], TempBoard),
+  select([8, 1, rook, white], TempBoard, [8, 1, king, white], Board).
+
+canResultIn(AllPieces, [5, 8, king, black], [8, 8], Board) :-
+  member([8,8,rook,black], AllPieces),
+  nextPieceWest(AllPieces, [8,8], [5,8,king,black]),
+  select([5, 8, king, black], AllPieces, [5, 8, rook, black], TempBoard),
+  select([8, 8, rook, black], TempBoard, [8, 8, king, black], Board).
 
 % pieceNorthOf(+AllPieces, +Position, -Piece)
 % Checks if Piece is North of Position
