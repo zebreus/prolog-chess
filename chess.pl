@@ -48,6 +48,13 @@ pieceOnBoardHasValue(AllPieces, Value) :-
 boardScore(Board, Score) :-
   aggregate_all(sum(X), pieceOnBoardHasValue(Board, X), Score).
 
+%gameEnded(+AllPieces, -Winner)
+gameEnded(AllPieces, black) :-
+  not( member([_,_,king,white], AllPieces) ).
+
+gameEnded(AllPieces, white) :-
+  not( member([_,_,king,black], AllPieces) ).
+
 % inBounds(+Position)
 inBounds([X,Y]) :-
   X > 0,

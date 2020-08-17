@@ -1,6 +1,16 @@
 :- begin_tests(helpers).
 :- include(chess).
 
+test(gameEndedCorrect) :-
+  gameEnded([ [1,1,king,black] ], black),
+  gameEnded([ [1,1,king,white] ], white),
+  gameEnded([ ], white),
+  gameEnded([ ], black),
+  not( gameEnded([ [1,1,king,white] ], black) ),
+  not( gameEnded([ [1,1,king,black] ], white) ),
+  not( gameEnded([ [1,1,king,black], [1,1,king,white] ], white) ),
+  not( gameEnded([ [1,1,king,black], [1,1,king,white] ], black) ).
+
 test(otherColorCorrect) :-
   otherColor(black, white),
   otherColor(white, black),
