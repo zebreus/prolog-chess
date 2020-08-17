@@ -426,6 +426,8 @@ findPieceOnSquare([_ | RestPieces], XCoord, YCoord, Piece, Color) :-
 % Prints a piece
 printPiece('no','piece') :- write('      |'), !.
 printPiece(Piece, Color) :-
+  % pieceKindUnicode(Piece, Color, UnicodePiece),
+  % write('  '), write(UnicodePiece), write('  '),
   printPieceColor(Color),
   printPieceKind(Piece),
   write('|').
@@ -443,6 +445,20 @@ printPieceKind(bishop) :- write('BI '), !.
 printPieceKind(rook) :- write('RO '), !.
 printPieceKind(queen) :- write('QU '), !.
 printPieceKind(king) :- write('KI '), !.
+
+pieceKindUnicode(pawn, white, "\u2659").
+pieceKindUnicode(knight, white, "\u2658").
+pieceKindUnicode(bishop, white, "\u2657").
+pieceKindUnicode(rook, white, "\u2656").
+pieceKindUnicode(queen, white, "\u2655").
+pieceKindUnicode(king, white, "\u2654").
+
+pieceKindUnicode(pawn, black, "\u265F").
+pieceKindUnicode(knight, black, "\u265E").
+pieceKindUnicode(bishop, black, "\u265D").
+pieceKindUnicode(rook, black, "\u265C").
+pieceKindUnicode(queen, black, "\u265B").
+pieceKindUnicode(king, black, "\u265A").
 
 getStartBoard(AllPieces) :-
   AllPieces = [
