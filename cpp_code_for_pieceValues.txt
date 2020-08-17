@@ -1,0 +1,73 @@
+
+
+#include <iostream>
+#include "string.h"
+
+using namespace std;
+
+int main()
+{
+
+ // https://www.onlinegdb.com/online_c++_compiler -> easy copy of the output
+    /*ajust piece, color, and arr*/
+    string piece = "rook";
+    string color = "black";
+            int arr[64] = {
+              0,  0,  0,  0,  0,  0,  0,  0,
+              5, 10, 10, 10, 10, 10, 10,  5,
+             -5,  0,  0,  0,  0,  0,  0, -5,
+             -5,  0,  0,  0,  0,  0,  0, -5,
+             -5,  0,  0,  0,  0,  0,  0, -5,
+             -5,  0,  0,  0,  0,  0,  0, -5,
+             -5,  0,  0,  0,  0,  0,  0, -5,
+              0,  0,  0,  5,  5,  0,  0,  0
+                  };
+            cout<<endl;
+        int flipped[64] = {0};
+
+         int index = 64;
+           for(int i=0; i<4; i++) {
+               index = index - 8; 
+               int index2 = index;
+               
+               for(int j=0; j<8; j++) {
+                 flipped[index + j] = arr[index - index2 + 8*i];
+                 flipped[index - index2 + 8*i] = arr[index + j];
+                 index2--;
+               }
+               
+           }
+           /*
+           // test 
+            for(int i=0; i<64; i++) {
+                if(i%8 == 0) 
+                    cout<<endl;
+                cout<<to_string(arr[i])<<", ";
+            }
+           cout<<endl<<endl;
+    
+           for(int i=0; i<64; i++) {
+                if(i%8 == 0) 
+                    cout<<endl;
+                cout<<to_string(flipped[i])<<", ";
+           }
+           */
+          
+          /** replace flipped with arr for white */
+            int x=1; int y = 9;
+            for(int i =0; i<=63; i++) {
+                if(i%8 == 0) {
+                    y -= 1;
+                    x = 1;
+                    cout<<endl;
+                }
+                string s = "pieceValue(AllPieces, [" + to_string(x)
+                +", "+to_string(y)+", "+piece+", "+color+"], "+ 
+                   to_string(flipped[i])+")."; 
+               cout<<s<<endl;
+               x++;
+            }
+            
+
+    return 0;
+}

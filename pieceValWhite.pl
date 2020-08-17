@@ -1,5 +1,8 @@
-% piece value for pawn positions
+
+% hier start positions for white pieces
+% piece value for white pawn positions
 %
+
 pieceValue(AllPieces, [1, 8, pawn, white], 0).  %pawn
 pieceValue(AllPieces, [2, 8, pawn, white], 0).
 pieceValue(AllPieces, [3, 8, pawn, white], 0).
