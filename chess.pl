@@ -80,6 +80,22 @@ move(AllPieces, [CurrentX, CurrentY, king, Color], [X, Y]) :-
   inBounds([X,Y]),
   canMoveTo(AllPieces, OtherColor, [X,Y]).
 
+move(AllPieces, [5, 1, king, white], [1, 1]) :-
+  member([1,1,rook,white], AllPieces),
+  nextPieceEast(AllPieces, [1,1], [5,1,king,white]).
+
+move(AllPieces, [5, 8, king, black], [1, 8]) :-
+  member([1,8,rook,black], AllPieces),
+  nextPieceEast(AllPieces, [1,8], [5,8,king,black]).
+
+move(AllPieces, [5, 1, king, white], [8, 1]) :-
+  member([8,1,rook,white], AllPieces),
+  nextPieceWest(AllPieces, [8,1], [5,1,king,white]).
+
+move(AllPieces, [5, 8, king, black], [8, 8]) :-
+  member([8,8,rook,black], AllPieces),
+  nextPieceWest(AllPieces, [8,8], [5,8,king,black]).
+
 move(AllPieces, [CurrentX, CurrentY, knight, Color], [X,Y]) :-
   otherColor(Color, OtherColor),
   (
