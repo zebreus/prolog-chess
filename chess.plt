@@ -65,6 +65,52 @@ test(moveStaysInBounds, [fail]) :-
   not(inBounds(ReachedPosition)),
   !.
 
+test(moveCastlingWithKing) :-
+  move([ [5,1,king,white], [8,1,rook,white]], [5,1,king,white], [8,1]),
+  move([ [5,1,king,white], [1,1,rook,white]], [5,1,king,white], [1,1]),
+  move([ [5,8,king,black], [8,8,rook,black]], [5,8,king,black], [8,8]),
+  move([ [5,8,king,black], [1,8,rook,black]], [5,8,king,black], [1,8]).
+
+test(moveCastlingNotWithRook, [fail] ) :-
+  move([ [5,1,king,white], [8,1,rook,white]], [8,1,rook,white], [5,1]);
+  move([ [5,1,king,white], [1,1,rook,white]], [1,1,rook,white], [5,1]);
+  move([ [5,8,king,black], [8,8,rook,black]], [8,8,rook,black], [5,8]);
+  move([ [5,8,king,black], [1,8,rook,black]], [1,8,rook,black], [5,8]).
+
+test(moveCastlingNotBlocked, [fail]) :-
+  move([ [5,1,king,white], [8,1,rook,white], [6,1,pawn,white] ], [5,1,king,white], [8,1]);
+  move([ [5,1,king,white], [8,1,rook,white], [7,1,pawn,white] ], [5,1,king,white], [8,1]);
+  move([ [5,1,king,white], [1,1,rook,white], [2,1,pawn,white] ], [5,1,king,white], [1,1]);
+  move([ [5,1,king,white], [1,1,rook,white], [3,1,pawn,white] ], [5,1,king,white], [1,1]);
+  move([ [5,1,king,white], [1,1,rook,white], [4,1,pawn,white] ], [5,1,king,white], [1,1]);
+  move([ [5,8,king,black], [8,8,rook,black], [6,8,pawn,black] ], [5,8,king,black], [8,8]);
+  move([ [5,8,king,black], [8,8,rook,black], [7,8,pawn,black] ], [5,8,king,black], [8,8]);
+  move([ [5,8,king,black], [1,8,rook,black], [2,8,pawn,black] ], [5,8,king,black], [1,8]);
+  move([ [5,8,king,black], [1,8,rook,black], [3,8,pawn,black] ], [5,8,king,black], [1,8]);
+  move([ [5,8,king,black], [1,8,rook,black], [4,8,pawn,black] ], [5,8,king,black], [1,8]).
+
+test(moveCastlingRookWrongColor, [fail] ) :-
+  move([ [5,1,king,white], [8,1,rook,black]], [5,1,king,white], [8,1]),
+  move([ [5,1,king,white], [1,1,rook,black]], [5,1,king,white], [1,1]),
+  move([ [5,8,king,black], [8,8,rook,white]], [5,8,king,black], [8,8]),
+  move([ [5,8,king,black], [1,8,rook,white]], [5,8,king,black], [1,8]).
+
+test(moveCastlingRookWrongSide, [fail] ) :-
+  move([ [5,1,king,white], [1,1,rook,black]], [5,1,king,white], [8,1]),
+  move([ [5,1,king,white], [8,1,rook,black]], [5,1,king,white], [1,1]),
+  move([ [5,8,king,black], [1,8,rook,white]], [5,8,king,black], [8,8]),
+  move([ [5,8,king,black], [8,8,rook,white]], [5,8,king,black], [1,8]).
+
+test(moveCastlingWrongY, [fail] ) :-
+  move([ [5,2,king,white], [1,2,rook,black]], [5,2,king,white], [8,1]);
+  move([ [5,2,king,white], [1,2,rook,black]], [5,2,king,white], [8,2]);
+  move([ [5,2,king,white], [8,2,rook,black]], [5,2,king,white], [1,1]);
+  move([ [5,2,king,white], [8,2,rook,black]], [5,2,king,white], [1,2]);
+  move([ [5,7,king,black], [1,7,rook,white]], [5,7,king,black], [8,8]);
+  move([ [5,7,king,black], [1,7,rook,white]], [5,7,king,black], [8,7]);
+  move([ [5,7,king,black], [8,7,rook,white]], [5,7,king,black], [1,8]);
+  move([ [5,7,king,black], [8,7,rook,white]], [5,7,king,black], [1,7]).
+
 test(moveWhitePawnFree) :-
   move([ [4,6,pawn,white]], [4,6,pawn,white], [4,7]).
 
