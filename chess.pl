@@ -1,11 +1,18 @@
 % will be used in minimax
 % piecePoints(-Piece, -Value).
-piecePoints(queen, 9).
-piecePoints(rook, 5).
-piecePoints(bishop, 3).
-piecePoints(knight, 3).
-piecePoints(pawn, 1).
-piecePoints(king, 100000).
+piecePoints(queen, white, 900).
+piecePoints(rook, white, 500).
+piecePoints(bishop, white, 330).
+piecePoints(knight, white, 320).
+piecePoints(pawn, white, 100).
+piecePoints(king, white, 20000).
+
+piecePoints(queen, black, -900).
+piecePoints(rook, black, -500).
+piecePoints(bishop, black, -330).
+piecePoints(knight, black, -320).
+piecePoints(pawn, black, -100).
+piecePoints(king, black, -20000).
 
 % otherColor(+ColorA, +ColorB)
 otherColor(black, white).
@@ -466,11 +473,17 @@ printAllStates :-
   canResultIn(AllPieces, [_, _, _, white], [_, _], NewAllPieces),
   printBoard(NewAllPieces).
 
-gameStep(AllPieces, Color) :-
-  printBoard(AllPieces),
-  input(XStart, YStart, XEnd, YEnd, Color),
-  findPieceOnSquare(AllPieces, XStart, YStart, Piece, Color),
-  move(AllPieces, [XStart, YStart, Piece, Color], [XEnd, YEnd]),
-  canResultIn(AllPieces, [XStart, YStart, Piece, Color], [XEnd, YEnd], NewAllPieces),
-  otherColor(Color, NewColor),
-  gameStep(NewAllPieces, NewColor).
+  gameStep(AllPieces, white) :-
+    input(XStart, YStart, XEnd, YEnd, white),
+    (
+      member([XStart, YStart, Piece, white], AllPieces),
+      canResultIn(AllPieces, [XStart, YStart, Piece, white], [XEnd, YEnd], NewAllPieces),
+      printBoard(NewAllPieces),
+      gameStep(NewAllPieces,black);
+      write('This move is not possible!'), nl,
+      gameStep(AllPieces, white)
+    ).
+
+  gameStep(AllPieces, black) :-
+    write('AI is supposed to do something here'), nl,
+    gameStep(AllPieces, white).
