@@ -358,13 +358,10 @@ canMoveTo(CollisionPiece, Color) :-
   CollisionPiece = [_,_,_,Color].
 
 % collision(+AllPieces, +Position, -Piece)
-collision([], _, []) :- !.
-collision([ThisPiece | Rest], [X,Y], Piece) :-
-  ThisPiece = [ThisX | [ThisY|_] ],
-  ThisX = X,
-  ThisY = Y,
-  Piece = ThisPiece, !;
-  collision(Rest,[X,Y],Piece).
+collision(AllPieces, [X,Y], Piece) :-
+  member( Piece, AllPieces ),
+  Piece = [X , Y , _ , _];
+  Piece = [].
 
 % input(-XStart, -YStart, -XEnd, -YEnd)
 % Gets valid user input
