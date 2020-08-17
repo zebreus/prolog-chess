@@ -533,6 +533,16 @@ test(moveQueenBeforeOtherPiece, all(Color = _)) :-
 
 :- end_tests(move).
 
+:- begin_tests(resultsInTest).
+:- include(chess).
+
+test(beatingPieceWorks) :-
+  canResultIn([ [4,4,king,black], [4,5,pawn,white]], [4,4,king,black], [4, 5], [[4,5,king,black]]),
+  canResultIn([ [4,4,king,white], [4,5,pawn,black]], [4,4,king,white], [4, 5], [[4,5,king,white]]),
+  canResultIn([ [4,4,king,white], [4,6,pawn,black]], [4,4,king,white], [4, 5], [[4,5,king,white], [4,6,pawn,black]]).
+
+:- end_tests(moveResultTest).
+
 % Test all collision related rules
 :- begin_tests(collisionDetection).
 :- include(chess).
