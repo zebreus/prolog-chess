@@ -556,9 +556,7 @@ test(castlingWorks) :-
   member( [5,1,rook,white], AfterCastling),
   member( [8,1,king,white], AfterCastling).
 
-
-
-:- end_tests(moveResultTest).
+:- end_tests(resultsInTest).
 
 % Test all collision related rules
 :- begin_tests(collisionDetection).

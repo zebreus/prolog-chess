@@ -1,21 +1,5 @@
 :- consult(pieceValues).
 
-% will be used in minimax
-% piecePoints(-Piece, -Value).
-piecePoints(queen, white, 900).
-piecePoints(rook, white, 500).
-piecePoints(bishop, white, 330).
-piecePoints(knight, white, 320).
-piecePoints(pawn, white, 100).
-piecePoints(king, white, 20000).
-
-piecePoints(queen, black, -900).
-piecePoints(rook, black, -500).
-piecePoints(bishop, black, -330).
-piecePoints(knight, black, -320).
-piecePoints(pawn, black, -100).
-piecePoints(king, black, -20000).
-
 % otherColor(+ColorA, +ColorB)
 otherColor(black, white).
 otherColor(white, black).
@@ -480,12 +464,6 @@ startGame :- nl,
   printBoard(AllPieces),
   gameStep(AllPieces, white).
 
-printAllStates :-
-  write('hi'),
-  getStartBoard(AllPieces),
-  canResultIn(AllPieces, [_, _, _, white], [_, _], NewAllPieces),
-  printBoard(NewAllPieces).
-
 gameStep(AllPieces, white) :-
   input(XStart, YStart, XEnd, YEnd, white),
   (
@@ -510,18 +488,10 @@ gameStep(AllPieces, black) :-
     gameStep(BestMove, white)
   ).
 
-%compareBoard(+MinMax, +BoardA, +ValueA, +BoardB, +ValueB, -BetterBoard, -BetterValue)
-compareBoard(max, BoardA, ValueA, _, ValueB, BoardA, ValueA) :-
-  ValueB =< ValueA.
-compareBoard(max, _, ValueA, BoardB, ValueB, BoardB, ValueB) :-
-  ValueB > ValueA.
-compareBoard(min, BoardA, ValueA, _, ValueB, BoardA, ValueA) :-
-  ValueB >= ValueA.
-compareBoard(min, _, ValueA, BoardB, ValueB, BoardB, ValueB) :-
-  ValueB < ValueA.
-
-% Chooses best move
-% newMinMax Alg
+% boardScore(+Color, +Board, -BoardScore, -Depth)
+% Checks the BoardScore for Board, if the next turn is made by Color.
+% Depth specifies, how far the minimax algorithm will go, before using value tables
+% A positive board score, indicates an advantage for black, a negative one an advantage for white
 boardScore(_, Board, Value, 0) :-
   aggregate_all(sum(X), pieceOnBoardHasValue(Board, X), Value).
 
