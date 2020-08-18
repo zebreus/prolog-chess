@@ -684,13 +684,11 @@ test(nextPieceNorthWestOnlyNextPiece, [fail]) :-
 :- include(chess).
 
 test(miniMaxSimpleCheckmateTwoRooks) :-
-  findall(X, canResultIn([[3,1,king,white], [7,2,rook,black], [8,3,rook,black]], [_,_,_,black], [_,_], X), AvailableBoards),
-  minMaxAlg(max, AvailableBoards, BestBoard, _, 3),
+  bestMoveForBlack([[3,1,king,white], [7,2,rook,black], [8,3,rook,black]], BestBoard),
   BestBoard = [[3,1,king,white], [7,2,rook,black], [8,1,rook,black]].
 
 test(miniMaxSimpleCheckmateQueenRook) :-
-  findall(X, canResultIn([[1,1,king,white], [7,2,queen,black], [8,3,rook,black]], [_,_,_,black], [_,_], X), AvailableBoards),
-  minMaxAlg(max, AvailableBoards, BestBoard, _, 3),
+  bestMoveForBlack([[1,1,king,white], [7,2,queen,black], [8,3,rook,black]], BestBoard),
   BestBoard = [[1,1,king,white], [7,2,queen,black], [8,1,rook,black]].
 
 :- end_tests(miniMax).

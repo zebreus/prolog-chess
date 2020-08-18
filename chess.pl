@@ -54,9 +54,6 @@ pieceOnBoardHasValue(AllPieces, Value) :-
   member(Piece, AllPieces),
   pieceValue(AllPieces, Piece, Value).
 
-boardScore(Board, Score) :-
-  aggregate_all(sum(X), pieceOnBoardHasValue(Board, X), Score).
-
 %gameEnded(+AllPieces, -Winner)
 gameEnded(AllPieces, black) :-
   not( member([_,_,king,white], AllPieces) ).
@@ -524,33 +521,43 @@ compareBoard(min, _, ValueA, BoardB, ValueB, BoardB, ValueB) :-
   ValueB < ValueA.
 
 % Chooses best move
-% minMaxAlg(+MinMax, +AllBoards, -BestBoard, -BestValue)
-minMaxAlg(min, [], [], 20000, _).
-minMaxAlg(max, [], [], -20000, _).
+% newMinMax Alg
+boardScore(_, Board, Value, 0) :-
+  aggregate_all(sum(X), pieceOnBoardHasValue(Board, X), Value).
 
-minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue, 0) :-
-  boardScore(FirstBoard, Value),
-  minMaxAlg(MinMax, RestBoards, OtherBestBoard, OtherBestValue, 0),
-  compareBoard(MinMax, FirstBoard, Value, OtherBestBoard, OtherBestValue, BestBoard, BestValue).
-
-minMaxAlg(MinMax, [FirstBoard | RestBoards], BestBoard, BestValue, Depth) :-
+boardScore(black, Board, BestValue, Depth) :-
   Depth > 0,
-  minMaxAlg(MinMax, RestBoards, NeighbourBestBoard, NeighbourBestValue, Depth),
-  swapMinMax(MinMax,SwappedMinMax),
-  translatePlayer(SwappedMinMax, Player),
-  findall(X, canResultIn(FirstBoard, [_,_,_,Player], [_,_], X), AvailableBoards),
   NDepth is Depth-1,
-  minMaxAlg(SwappedMinMax, AvailableBoards, _, OtherBestValue, NDepth),
-  compareBoard(MinMax, NeighbourBestBoard, NeighbourBestValue, FirstBoard, OtherBestValue, BestBoard, BestValue).
+  aggregate_all(max(X), possibleBoardScore(black, Board, X, NDepth), BestValue).
 
-% swapMinMax(+MinOrMax, TheOther)
-% Changes the MinMax atom.
-swapMinMax(max, min).
-swapMinMax(min, max).
+boardScore(white, Board, BestValue, Depth) :-
+  Depth > 0,
+  NDepth is Depth-1,
+  aggregate_all(min(X), possibleBoardScore(white, Board, X, NDepth), BestValue).
 
-translatePlayer(min, white).
-translatePlayer(max, black).
+possibleBoardScore(Player, Board, Value, Depth) :-
+  otherColor(Player, OtherPlayer),
+  canResultIn(Board, [_,_,_,Player], [_,_], ResultingBoard),
+  boardScore(OtherPlayer, ResultingBoard, Value, Depth).
+
+possibleBoardScore(black, _, Score, Depth) :-
+  Score is -999999 - Depth.
+
+possibleBoardScore(white, _, Score, Depth) :-
+  Score is 999999 + Depth.
+
+bestMoveForBlack(Board,BestBoard) :-
+  findall(
+    X,
+    (
+      canResultIn(Board, [_,_,_,black], [_,_], ResultingBoard),
+      boardScore(white, ResultingBoard, Value, 2),
+      X = [ResultingBoard, Value]
+    ),
+    BoardValues
+  ),
+  sort(2, @>, BoardValues, SortedBoards),
+  SortedBoards = [ [BestBoard, _] | _ ].
 
 startMinMax(Board, BestBoard) :-
-  findall(X, canResultIn(Board, [_,_,_,black], [_,_], X), AvailableBoards),
-  minMaxAlg(max, AvailableBoards, BestBoard, _, 2).
+  bestMoveForBlack(Board, BestBoard).
