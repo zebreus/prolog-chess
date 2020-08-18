@@ -493,15 +493,23 @@ gameStep(AllPieces, white) :-
     member([XStart, YStart, Piece, white], AllPieces),
     canResultIn(AllPieces, [XStart, YStart, Piece, white], [XEnd, YEnd], NewAllPieces),
     printBoard(NewAllPieces),
-    gameStep(NewAllPieces,black);
+    (
+      gameEnded(NewAllPieces, white),
+      write('Congratulations! You won against the AI!'), nl, !;
+      gameStep(NewAllPieces,black)
+    );
     write('This move is not possible!'), nl,
     gameStep(AllPieces, white)
   ).
 
 gameStep(AllPieces, black) :-
-  startMinMax(AllPieces, BestMove),
+  startMinMax(AllPieces, BestMove), !,
   printBoard(BestMove),
-  gameStep(BestMove, white).
+  (
+    gameEnded(BestMove, black),
+    write('Sorry, the AI beat you!'), nl, !;
+    gameStep(BestMove, white)
+  ).
 
 %compareBoard(+MinMax, +BoardA, +ValueA, +BoardB, +ValueB, -BetterBoard, -BetterValue)
 compareBoard(max, BoardA, ValueA, _, ValueB, BoardA, ValueA) :-
