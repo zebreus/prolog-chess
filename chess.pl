@@ -1,3 +1,5 @@
+:- consult(pieceValues).
+
 % will be used in minimax
 % piecePoints(-Piece, -Value).
 piecePoints(queen, white, 900).
@@ -34,18 +36,18 @@ availablePiece(knight).
 availablePiece(pawn).
 
 % Placeholder pieceValue, until the real tables are added
-pieceValue(_, [_,_,pawn,black], 1).
-pieceValue(_, [_,_,pawn,white], -1).
-pieceValue(_, [_,_,queen,black], 9).
-pieceValue(_, [_,_,queen,white], -9).
-pieceValue(_, [_,_,rook,black], 5).
-pieceValue(_, [_,_,rook,white], -5).
-pieceValue(_, [_,_,bishop,black], 3).
-pieceValue(_, [_,_,bishop,white], -3).
-pieceValue(_, [_,_,knight,black], 3).
-pieceValue(_, [_,_,knight,white], -3).
-pieceValue(_, [_,_,king,black], 9999).
-pieceValue(_, [_,_,king,white], -9999).
+% pieceValue(_, [_,_,pawn,black], 1).
+% pieceValue(_, [_,_,pawn,white], -1).
+% pieceValue(_, [_,_,queen,black], 9).
+% pieceValue(_, [_,_,queen,white], -9).
+% pieceValue(_, [_,_,rook,black], 5).
+% pieceValue(_, [_,_,rook,white], -5).
+% pieceValue(_, [_,_,bishop,black], 3).
+% pieceValue(_, [_,_,bishop,white], -3).
+% pieceValue(_, [_,_,knight,black], 3).
+% pieceValue(_, [_,_,knight,white], -3).
+% pieceValue(_, [_,_,king,black], 9999).
+% pieceValue(_, [_,_,king,white], -9999).
 
 % TODO write tests boardScore and pieceOnBoardHasValue, once the real tables are added
 pieceOnBoardHasValue(AllPieces, Value) :-
