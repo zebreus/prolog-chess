@@ -335,27 +335,24 @@ collision(AllPieces, [X,Y], Piece) :-
 % input(-XStart, -YStart, -XEnd, -YEnd)
 % Gets valid user input
 input(XStart, YStart, XEnd, YEnd, Color) :-
-  readInput(XStart, YStart, XEnd, YEnd, Color),
-  checkInput(XStart, YStart, XEnd, YEnd), !.
+  readInput(XStart, YStart, XEnd, YEnd, Color), !.
 input(XStart, YStart, XEnd, YEnd, Color) :-
   write('Invalid input, please check that you have the right format!'),nl,
   input(XStart, YStart, XEnd, YEnd, Color).
 
 % readInput(-XStart, -YStart, -XEnd, -YEnd)
 % Reads and parses the input from the user
-readInput(XStart, YStart, XEnd, YEnd, Color) :-
+readInput(XS, YS, XE, YE, Color) :-
   write('Please enter your next move for '),
   write(Color),
-  write(' [Format: "A2,A4".]:'), nl,
-  read(Input),
-  string_codes(Input, [InputXS|[InputYS|[_|[InputXE|[InputYE|_]]]]]),
-  XStart is InputXS - 64, XEnd is InputXE - 64,
-  YStart is InputYS - 48, YEnd is InputYE - 48.
-  %write(XStart),write("|"),write(YStart),nl,write(XEnd),write("|"),write(YEnd).
-
-% checkInput(+XS, +YS, +XE, +YE)
-% Ensures, that only valid numbers are used in the input
-checkInput(XS, YS, XE, YE) :-
+  write(' [Format: A2,A4 ]:'), nl,
+  read_string(current_input,5,Input),
+  read_pending_codes(current_input,_,_),
+  string_codes(Input, [InputXS, InputYS, 44, InputXE, InputYE]),
+  XS is InputXS - 64,
+  XE is InputXE - 64,
+  YS is InputYS - 48,
+  YE is InputYE - 48,
   XS >= 1, XS =< 8,
   YS >= 1, YS =< 8,
   XE >= 1, XE =< 8,
