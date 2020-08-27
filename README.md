@@ -1,6 +1,10 @@
-# IAs
+# prolog-chess
+A simple minimax chess engine written in swi prolog
 
-# Run unit tests
+## Start the game
+Load the chess.pl file, then type `startGame.`.
+
+## Run unit tests
 You can load the unit test file with 
 ```prolog
 load_test_files([]).
