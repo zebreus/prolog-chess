@@ -20,7 +20,7 @@ stdenv.mkDerivation rec {
     cat <<EOF > $out/bin/${pname}
     #!/usr/bin/env bash
     
-    swipl -O -f $out/opt/prolog-chess/chess.pl -g "startGame, halt."
+    ${lib.getExe swiProlog} -O -f $out/opt/prolog-chess/chess.pl -g "startGame, halt."
 
     EOF
     chmod a+x $out/bin/${pname}
